@@ -21,7 +21,7 @@ public:
 static const unsigned int PIXEL_REPRESENTATION = 0x00280103,
 						  TRANSFER_SYNTAX_UID = 0x00020010,
 						  MODALITY = 0x00080060,
-SLICE_THICKNESS = 0x00180050,
+						  SLICE_THICKNESS = 0x00180050,
 SLICE_SPACING = 0x00180088,
 SAMPLES_PER_PIXEL = 0x00280002,
    PHOTOMETRIC_INTERPRETATION = 0x00280004,
@@ -105,7 +105,7 @@ private:
 	int m_min8;
 	int m_min16;
 
-	static const int m_IMPLICIT_VR;// = 0x2D2D; 
+	static const int m_IMPLICIT_VR = 0x2D2D; 
 
     int m_offset;
 
@@ -123,6 +123,10 @@ private:
 	string GetString(int);
 
 	unsigned int ReadTag();
+
+	int ReadElementLength();
+
+	unsigned int ReadInt();
 
 	unsigned short ReadUShort();
 

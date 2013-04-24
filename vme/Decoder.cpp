@@ -32,7 +32,6 @@ CDecoder::~CDecoder(void)
 
 }
 
-
 string CDecoder::GetString(int size){
 	
 	char* buff = new char[size];
@@ -61,11 +60,104 @@ unsigned short CDecoder::ReadUShort(){
 	return 0;
 }
 
+unsigned int CDecoder::ReadInt(){
+	
+	unsigned char b0 = ReadByte();
+	unsigned char b1 = ReadByte();
+	unsigned char b2 = ReadByte();
+	unsigned char b3 = ReadByte();
+
+	if(m_littleEndian){
+		return ((b3<<24)+(b2<<16)+(b1<<8)+b0);
+	}
+	else{
+		return ((b0<<24)+(b1<<16)+(b2<<8)+b3);
+	}
+}
+
 unsigned int CDecoder::ReadTag(){
+
 	unsigned short b0 = ReadUShort();
 	unsigned short b1 = ReadUShort();
 
 	return (unsigned int)((b0 << 16) + b1);
+}
+
+int CDecoder::ReadElementLength(){
+	
+	unsigned char b0 = ReadByte();
+	unsigned char b1 = ReadByte();
+	unsigned char b2 = ReadByte();
+	unsigned char b3 = ReadByte();
+
+	m_vr = (b0 << 8) + b1 ;
+
+	switch(m_vr)
+	{
+		case OB:
+		case OW:
+		//case OF:
+		case SQ:
+		case UT: 
+		//case OR:
+		case UN:{	  
+				 if(b2 ==0 && b3 ==0){
+					return ReadInt();
+				 }
+				// implicit VR Data Element
+				else{
+
+					m_vr = m_IMPLICIT_VR;
+
+					if (m_littleEndian){
+                        return ((b3 << 24) + (b2 << 16) + (b1 << 8) + b0);
+					}
+                    else{
+                        return ((b0 << 24) + (b1 << 16) + (b2 << 8) + b3);
+					}
+			   }
+		}
+		case AE:
+		case AS:
+		case AT:
+		case CS:
+		case DA:
+		case DS:
+		case DT:
+		case FD:
+		case FL:
+		case IS:
+		case LO:
+		case LT:
+		case PN:
+		case SH:
+		case SL:
+		case SS:
+		case ST:
+		case TM:
+		case UI:
+		case UL:
+		case US:
+		case QQ:{
+			if (m_littleEndian){
+				return ((b3 << 8) + b2);
+			}
+            else{
+				return ((b2 << 8) + b3);
+					}
+			}
+		default:{
+
+			m_vr = m_IMPLICIT_VR;
+
+			if (m_littleEndian){
+				return ((b3 << 24) + (b2 << 16) + (b1 << 8) + b0);
+			}
+            else{
+				return ((b0 << 24) + (b1 << 16) + (b2 << 8) + b3);
+			}
+		}
+	}
 }
 
 void CDecoder::ReadFile(QString path)
@@ -85,7 +177,6 @@ void CDecoder::ReadFile(QString path)
 
 		if(CDecoder::DICM.compare(0, 4, dicom)!=0){
 
-			// write to log 
 			return;
 		}
 		else{
@@ -93,6 +184,12 @@ void CDecoder::ReadFile(QString path)
 			while(m_readingDataElements){
 				
 				unsigned int tag = ReadTag();
+
+				// it is assumed that DICOM default transfer syntax is implicit VR, little endian
+
+				m_elementLength = ReadElementLength();
+
+				// Value
 
 				system("pause");
 
