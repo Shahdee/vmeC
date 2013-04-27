@@ -1,11 +1,14 @@
 #pragma once
 
-#include <string.h>
+#include "stdafx.h"
+#include <string>
 #include <iostream>
 #include <fstream>
 #include "JpegDecoder.h"
 #include "DicomDictionary.h"
 #include <QObject>
+#include <map>
+
 using namespace std;
 
 class CDecoder : public QObject
@@ -22,8 +25,8 @@ static const unsigned int PIXEL_REPRESENTATION = 0x00280103,
 						  TRANSFER_SYNTAX_UID = 0x00020010,
 						  MODALITY = 0x00080060,
 						  SLICE_THICKNESS = 0x00180050,
-SLICE_SPACING = 0x00180088,
-SAMPLES_PER_PIXEL = 0x00280002,
+   SLICE_SPACING = 0x00180088,
+   SAMPLES_PER_PIXEL = 0x00280002,
    PHOTOMETRIC_INTERPRETATION = 0x00280004,
    PLANAR_CONFIGURATION = 0x00280006,
    NUMBER_OF_FRAMES = 0x00280008,
@@ -61,7 +64,7 @@ static const int
             ST = 0x5354,
             TM = 0x544D,
             UI = 0x5549,
-            UL = 0x554C,
+            UL = 0x554C,   
             US = 0x5553,
             UT = 0x5554,
             OB = 0x4F42,
@@ -69,6 +72,8 @@ static const int
             SQ = 0x5351,
             UN = 0x554E,
             QQ = 0x3F3F;
+
+static const map<unsigned short, string> dictionary;
 
 
 /*There are three special SQ related Data Elements that are not ruled by the VR encoding rules

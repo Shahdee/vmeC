@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "Decoder.h"
-
+#include "DicomDictionary.h"
+#include <string>
 
 CDecoder::CDecoder(void)
 {
@@ -189,7 +190,25 @@ void CDecoder::ReadFile(QString path)
 
 				m_elementLength = ReadElementLength();
 
-				// Value
+				if (m_elementLength == -1 && tag != PIXEL_DATA){
+                    m_elementLength = 0;
+                    m_inSequence = true;
+                }
+
+				if ((m_location & 1) != 0){
+                    m_oddLocations = true;
+				}
+
+                if (m_inSequence){
+                    //AddInfo(tag, null);                     
+                    continue;
+                }
+				/*
+				switch (tag)
+				{
+					case 
+				
+				}*/
 
 				system("pause");
 
@@ -211,4 +230,5 @@ double CDecoder::m_pixelHeight = 1.0f;
 
 
 
+const map<unsigned short, string> CDecoder::dictionary = CDicomDictionary::InitMap();
 
