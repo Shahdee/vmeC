@@ -100,10 +100,9 @@ int CDecoder::ReadElementLength(){
 		//case OF:
 		case SQ:
 		case UT: 
-		//case OR:
 		case UN:{	  
 				 if(b2 ==0 && b3 ==0){
-					return ReadInt();
+					return ReadInt(); // 4 bytes
 				 }
 				// implicit VR Data Element
 				else{
@@ -161,6 +160,15 @@ int CDecoder::ReadElementLength(){
 	}
 }
 
+/*
+If we have Data Element with VR = SQ
+*/
+void CDecoder::ReadSequence(){
+	
+	
+
+}
+
 void CDecoder::ReadFile(QString path)
 {
 	long offset  = CDecoder::FIRST_OFFSET;
@@ -195,23 +203,72 @@ void CDecoder::ReadFile(QString path)
                     m_inSequence = true;
                 }
 
+				/*
 				if ((m_location & 1) != 0){
                     m_oddLocations = true;
 				}
+				*/
+
 
                 if (m_inSequence){
-                    //AddInfo(tag, null);                     
+                    //AddInfo(tag, null);  
+					ReadSequence();
                     continue;
                 }
-				/*
+				
 				switch (tag)
 				{
-					case 
-				
-				}*/
+					case BITS_ALLOCATED:{
+									
+					}
+					case ROWS:{
+							  
+					}
 
-				system("pause");
+					case COLUMNS:{
+							 
+					}
 
+					case IMAGE_POSITION:{}
+
+					case IMAGE_ORIENTATION:{}
+
+					case SLICE_THICKNESS:{}
+
+					case SLICE_SPACING:{}
+
+					case PIXEL_REPRESENTATION:{
+												  
+					}
+
+					case SAMPLES_PER_PIXEL:{}
+
+					case RESCALE_SLOPE:{}
+
+					case RESCALE_INTERCEPT:{}
+
+					case WINDOW_CENTER:{
+									   
+					}
+
+					case WINDOW_WIDTH:{
+					
+					}
+
+					case PIXEL_DATA:{
+						if(!m_compressedImage){
+						
+						}
+						else{
+						
+						}
+					}
+
+					default:{
+						AddInfo();
+						break;
+					}
+				}
 			}
 		}
 	}

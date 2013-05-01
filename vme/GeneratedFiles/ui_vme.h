@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'vme.ui'
 **
-** Created: Thu 25. Apr 23:06:55 2013
+** Created: Wed 1. May 11:10:16 2013
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!

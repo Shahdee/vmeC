@@ -20,5 +20,8 @@ map<unsigned short, string> CDicomDictionary::InitMap()
 	mp[0x00020002] = "UIMedia Storage SOP Class UID";
 	mp[0x00020003] ="UIMedia Storage SOP Inst UID";
 
+
+	// image data
+
 	return mp;
 }
