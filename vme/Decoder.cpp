@@ -190,6 +190,7 @@ void CDecoder::ReadFile(QString path)
 
 				m_elementLength = ReadElementLength();
 
+				/*
 				if (m_elementLength == -1 && tag != PIXEL_DATA){
                     m_elementLength = 0;
                     m_inSequence = true;
@@ -202,13 +203,14 @@ void CDecoder::ReadFile(QString path)
                 if (m_inSequence){
                     //AddInfo(tag, null);                     
                     continue;
-                }
-				/*
+                }*/
+
+				
 				switch (tag)
 				{
 					case 
 				
-				}*/
+				}
 
 				system("pause");
 
