@@ -26,7 +26,8 @@ static const unsigned int PIXEL_REPRESENTATION = 0x00280103,
 						  MODALITY = 0x00080060,
 
 						  IMAGE_POSITION = 0x00200032,
-						  IMAGE_ORIENTATION = 0x00200035,
+						  IMAGE_ORIENTATION = 0x00200035, // retired
+						  IMAGE_ORIENTATION_PATIENT = 0x00200037,
 
 						  SLICE_THICKNESS = 0x00180050,
 						  SLICE_SPACING = 0x00180088,
@@ -38,7 +39,9 @@ static const unsigned int PIXEL_REPRESENTATION = 0x00280103,
 						  ROWS = 0x00280010,
 						  COLUMNS = 0x00280011,
 						  PIXEL_SPACING = 0x00280030,
+
 						  BITS_ALLOCATED = 0x00280100,
+
 						  WINDOW_CENTER = 0x00281050,
 						  WINDOW_WIDTH = 0x00281051,
 						  RESCALE_INTERCEPT = 0x00281052,
@@ -47,7 +50,13 @@ static const unsigned int PIXEL_REPRESENTATION = 0x00280103,
 						  GREEN_PALETTE = 0x00281202,
 						  BLUE_PALETTE = 0x00281203,
 						  ICON_IMAGE_SEQUENCE = 0x00880200,
-						  PIXEL_DATA = 0x7FE00010;
+						  PIXEL_DATA = 0x7FE00010,
+
+						  PATIENTS_NAME = 0x00100010,
+						  PATIENT_ID = 0x00100020,
+						  PATIENTS_BIRTHDATE = 0x00100030,
+						  PATIENTS_SEX = 0x00100040;
+
 
 // common Value Representations
 static const int
@@ -79,14 +88,14 @@ static const int
             UN = 0x554E,
             QQ = 0x3F3F;
 
-static const map<unsigned short, string> dictionary;
+static const map<unsigned int, string> dictionary;
 
 
 /*There are three special SQ related Data Elements that are not ruled by the VR encoding rules
 conveyed by the Transfer Syntax. They shall be encoded as Implicit VR. NEMA DICOM 3.0*/
-static const string ITEM;
-static const string ITEM_DELIMITATION;
-static const string SEQUENCE_DELIMITATION;
+static const unsigned int ITEM = 0xFFFEE000;
+static const unsigned int ITEM_DELIMITATION = 0xFFFEE00D;
+static const unsigned int SEQUENCE_DELIMITATION = 0xFFFEE0DD;
 
 //String dicomFileName;
 static const int FIRST_OFFSET = 128;
@@ -96,8 +105,10 @@ private:
 
 	//CDicomDictionary m_dic;
 	//CJpegDecoder m_jpeg;
+	long m_position;  // для чтения сжатого jpg
 
-	char *m_fragment; // i needed 1 byte data type
+
+	char *m_fragment; // I needed 1 byte data type
 
 	//public List<string> dicomInfo;
 
@@ -105,13 +116,17 @@ private:
 
 	bool m_readingDataElements;
 	bool m_oddLocations;
+	
 	bool m_inSequence;
+	bool m_itemDelimiter;
+	bool m_sequenceDelimiter;
+
 	bool m_littleEndian;
 	bool m_delimiter;
 
 	int m_elementLength; // because can be negative despite the fact that is a length value
-    unsigned int m_vr; // Value Representation
-	unsigned int m_tag;
+    unsigned int m_vr; // Data Item VR
+	unsigned int m_tag; // Data Item tag
 
 	int m_min8;
 	int m_min16;
@@ -127,8 +142,19 @@ private:
     
 	int m_ctrPixels;
 
-    long m_position;  // для чтения сжатого jpg
 
+
+	string m_patientsName;
+	string m_patientID;
+	string m_patientsBirthdate;
+	string m_patientsSex;
+
+	string m_sliceThikness; // temp type
+	string m_sliceSpasing; // temp type
+
+	string m_imagePosition; // temp type
+	string m_imageOrientation; // temp type
+	string m_imageOrientationPatient; // temp type
 
 	//--------------------------------
 	string GetString(int);
@@ -144,12 +170,18 @@ private:
 	unsigned char ReadByte();
 
 	void ReadSequence();
+	void ReadItem();
+	void TrySkipSequence();
+	void SkipBytes(const int&);
+
+	void AddInfo(const unsigned int& tag, string& value);
+	char* GetString(); 
 
 public:
 
 	double m_rescaleIntercept;
 	double m_rescaleSlope;
-	
+
 	unsigned short m_bitsAllocated;
 
 	int m_width;

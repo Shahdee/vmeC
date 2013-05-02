@@ -2,6 +2,7 @@
 #include "Decoder.h"
 #include "DicomDictionary.h"
 #include <string>
+#include <sstream>
 
 CDecoder::CDecoder(void)
 {
@@ -11,7 +12,7 @@ CDecoder::CDecoder(void)
     m_dicomFileReadSuccess = false;
     m_readingDataElements = true;
     m_oddLocations = false;
-	m_delimiter = false;
+	m_delimiter = false; // ?
 	m_dicomDir = false;
 	m_location = 0; // pointer location in file
 	m_position = -1;
@@ -25,6 +26,12 @@ CDecoder::CDecoder(void)
 	m_unit = "mm";
 	m_windowCentre = 1;
 	m_windowWidth = 1;
+
+	m_inSequence = false;
+	m_itemDelimiter = false;
+	m_sequenceDelimiter = false ;
+
+
 }
 
 
@@ -160,17 +167,218 @@ int CDecoder::ReadElementLength(){
 	}
 }
 
+void CDecoder::SkipBytes(const int& length){
+
+	m_dicomFile.seekg(length, ios::cur); 	
+	m_location += length;
+}
+
+
+void CDecoder::TrySkipSequence(){
+
+	// now it is the only one real case
+	if(m_elementLength == -1){
+
+		m_sequenceDelimiter = true;
+	}
+	else{
+
+		if(m_elementLength == 0 ){  // sequence with no items
+
+			m_sequenceDelimiter = false;
+			m_inSequence = false;
+			m_itemDelimiter = false;
+
+			return;
+		}
+		else{
+
+			m_sequenceDelimiter = false;
+			m_inSequence = false;
+			m_itemDelimiter = false;
+
+			SkipBytes(m_elementLength);
+			m_elementLength = 0;
+		}
+	}
+	return;
+}
+
+/*
+* Read item nested in Sequence of Items in Data Element
+*/
+void CDecoder::ReadItem(){
+	
+
+	unsigned int tag = ReadTag(); // 4
+	int length = ReadInt(); // ReadInt() instead of ReadElementLength because we are in sequence
+
+	// string conversion 
+	//stringstream ss;
+	//ss << tag;
+	//string const textTag = ss.str();
+
+	switch(tag){
+		
+		case ITEM:{
+
+			if(length==-1){
+
+				//ReadDataSet();
+
+				unsigned int itemtag = ReadTag(); // 4
+				int itemLength = ReadInt();  //4  ReadInt() instead of ReadElementLength because we are in sequence
+				
+				if(itemtag==ITEM_DELIMITATION && itemLength==0){
+					m_itemDelimiter = true;
+					return;
+				}
+			}
+			else{
+				//ReadDataSet();
+				SkipBytes(length);
+			}
+
+			break;
+		}
+
+		case SEQUENCE_DELIMITATION:{
+				
+			if(length==0){
+				m_sequenceDelimiter = false;
+				m_inSequence = false; 
+				m_itemDelimiter = false;  // no reason
+			}
+			break;
+		}
+
+		// strange case
+		default:{
+			m_sequenceDelimiter = false;
+			m_inSequence = false;
+			m_itemDelimiter = false;
+			return;
+		}
+	}
+}
+
+
 /*
 If we have Data Element with VR = SQ
 */
 void CDecoder::ReadSequence(){
 	
-	
-
+	while(m_inSequence){
+		ReadItem();
+	}
 }
 
-void CDecoder::ReadFile(QString path)
-{
+char* CDecoder::GetString(){
+
+	//vector<char> buf(m_elementLength);
+
+	char *buf = new char[m_elementLength+1];
+	m_dicomFile.read(buf, m_elementLength);
+
+	buf[m_elementLength]=0;
+	m_location+=m_elementLength;
+	
+	return buf;
+}
+
+void CDecoder::AddInfo(const unsigned int& tag, string& value){
+	
+	unsigned int valueRepresentation = 0;
+
+	if(m_vr == m_IMPLICIT_VR){
+
+		//map<unsigned int, string>::const_iterator it = dictionary.find(tag);
+		string iodsAttText =  dictionary.find(tag)->second;
+		string vr = iodsAttText.substr(0, 2);
+		valueRepresentation = atoi(&(vr[0]));
+	}
+	else{
+		valueRepresentation = m_vr;
+	}
+
+	
+
+	switch(valueRepresentation){
+
+
+		case LO:
+		case CS:
+		case PN:
+		case DA:
+		case DS:{
+
+			value.assign(GetString()); 
+			break;
+		}
+
+		//special VR
+		case OB:
+		case OW:
+		//case OF:
+		case SQ:
+		case UT: 
+		case UN:
+		//--e
+
+		case AE:
+		case AS:
+		case AT:
+
+		case DT:
+		case FD:
+		case FL:
+		case IS:
+		case LT:
+		case SH:
+		case SL:
+		case SS:
+		case ST:
+		case TM:
+		case UI:
+		case UL:{
+			
+			// dummy
+			m_dicomFile.seekg(m_elementLength, ios::cur);
+			m_location+=m_elementLength;
+			break;
+			// --e
+				
+		}
+
+
+		case US:{
+				
+			char *buf = new char[m_elementLength+1];
+			unsigned short num = ReadUShort();
+			itoa(num, buf, 10);
+			buf[m_elementLength] =0;
+			value.assign(buf);
+
+			break;
+
+		}
+
+		case QQ:{
+			
+			// dummy
+			m_dicomFile.seekg(m_elementLength, ios::cur);
+			m_location+=m_elementLength;
+			break;
+			// --e
+		}
+	}
+}
+
+// it is assumed that DICOM default transfer syntax is implicit VR, little endian
+void CDecoder::ReadFile(QString path){
+
+	string dummyString; // dummy
+
 	long offset  = CDecoder::FIRST_OFFSET;
 
 	m_dicomFile.open(path.toStdString(), ios::binary);
@@ -193,14 +401,14 @@ void CDecoder::ReadFile(QString path)
 			while(m_readingDataElements){
 				
 				unsigned int tag = ReadTag();
-
-				// it is assumed that DICOM default transfer syntax is implicit VR, little endian
+				m_tag = tag;
 
 				m_elementLength = ReadElementLength();
 
+				// I think sometimes it could fail check, for example m_elementLength could be even number of bytes for vr = SQ
 				if (m_elementLength == -1 && tag != PIXEL_DATA){
-                    m_elementLength = 0;
                     m_inSequence = true;
+					TrySkipSequence();
                 }
 
 				/*
@@ -209,55 +417,141 @@ void CDecoder::ReadFile(QString path)
 				}
 				*/
 
-
                 if (m_inSequence){
-                    //AddInfo(tag, null);  
+                    //AddInfo(tag, dummyString);  
 					ReadSequence();
+					m_elementLength = 0; // reset
                     continue;
                 }
 				
-				switch (tag)
+				switch (m_tag)
 				{
-					case BITS_ALLOCATED:{
-									
+
+					case PATIENTS_NAME:{
+
+						AddInfo(tag, m_patientsName);
+						break;
 					}
+					case PATIENT_ID:{
+
+						AddInfo(tag, m_patientID);
+						break;				
+					}
+					case PATIENTS_BIRTHDATE:{
+
+						AddInfo(tag, m_patientsBirthdate);
+						break;						
+					}
+                    case PATIENTS_SEX:{
+
+						AddInfo(tag, m_patientsSex);
+						break;
+
+					}
+                    
+					case BITS_ALLOCATED:{
+						
+						m_bitsAllocated = ReadUShort();
+						break;
+
+					}
+
 					case ROWS:{
-							  
+
+						//AddInfo(tag, dummyString);
+						//m_width = atoi(dummyString.c_str());
+
+						m_width = ReadUShort();
+						break;
 					}
 
 					case COLUMNS:{
+
+						//AddInfo(tag, dummyString);
+						//m_height = atoi(dummyString.c_str());
+
+						m_height = ReadUShort();
+						break;
 							 
 					}
 
-					case IMAGE_POSITION:{}
-
-					case IMAGE_ORIENTATION:{}
-
-					case SLICE_THICKNESS:{}
-
-					case SLICE_SPACING:{}
-
-					case PIXEL_REPRESENTATION:{
-												  
+					case IMAGE_POSITION:{
+						
+						AddInfo(tag, m_imagePosition);
+						break;
 					}
 
-					case SAMPLES_PER_PIXEL:{}
+					case IMAGE_ORIENTATION:{ // retired (PS 3.6)
+							
+						AddInfo(tag, m_imageOrientation);
+						break;
+					}
 
-					case RESCALE_SLOPE:{}
+					case IMAGE_ORIENTATION_PATIENT:{ 
+							
+						AddInfo(tag, m_imageOrientationPatient);
+						break;
+					}
 
-					case RESCALE_INTERCEPT:{}
+					case SLICE_THICKNESS:{
+						
+						AddInfo(tag, m_sliceThikness);
+						//
+						break;
+					}
+
+					case SLICE_SPACING:{
+
+						AddInfo(tag, m_sliceSpasing);	
+						//
+						break;
+					}
+
+					case PIXEL_REPRESENTATION:{
+							
+						m_pixelRepresentation = ReadUShort();
+						break;
+					}
+
+					case SAMPLES_PER_PIXEL:{
+						
+						AddInfo(tag, dummyString);
+						m_samplesPerPixel = atoi(dummyString.c_str());
+						break;
+					}
+
+					case RESCALE_SLOPE:{
+							
+						AddInfo(tag, dummyString);
+						m_rescaleSlope = atof(dummyString.c_str());
+						break;
+					}
+					case RESCALE_INTERCEPT:{
+					
+						AddInfo(tag, dummyString);
+						m_rescaleIntercept = atof(dummyString.c_str());
+						break;
+					}
 
 					case WINDOW_CENTER:{
-									   
+						
+						AddInfo(tag, dummyString);
+						m_windowCentre = atof(dummyString.c_str());
+						break;
 					}
 
 					case WINDOW_WIDTH:{
 					
+						AddInfo(tag, dummyString);
+						m_windowWidth = atof(dummyString.c_str());
+						break;
 					}
 
 					case PIXEL_DATA:{
 						if(!m_compressedImage){
 						
+							int i;
+							i=0;
 						}
 						else{
 						
@@ -265,27 +559,23 @@ void CDecoder::ReadFile(QString path)
 					}
 
 					default:{
-						AddInfo();
+						
+						AddInfo(tag, dummyString);
 						break;
 					}
 				}
 			}
+
 		}
 	}
 }
 
 
-const string CDecoder::ITEM = "FFFEE000";
-const string CDecoder::ITEM_DELIMITATION = "FFFEE00D";
-const string CDecoder::SEQUENCE_DELIMITATION ="FFFEE0DD";
 const string CDecoder::DICM = "DICM";
-
 
 double CDecoder::m_pixelDepth = 1.0;
 double CDecoder::m_pixelWidth = 1.0;
 double CDecoder::m_pixelHeight = 1.0f;
 
-
-
-const map<unsigned short, string> CDecoder::dictionary = CDicomDictionary::InitMap();
+const map<unsigned int, string> CDecoder::dictionary = CDicomDictionary::InitMap();
 

@@ -12,6 +12,6 @@ public:
 	CDicomDictionary(void);
 	~CDicomDictionary(void);
 
-	static map<unsigned short, string> InitMap();
+	static map<unsigned int, string> InitMap();
 };
 
