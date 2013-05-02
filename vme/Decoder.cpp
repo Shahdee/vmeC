@@ -8,6 +8,7 @@ CDecoder::CDecoder(void)
 {
 	m_littleEndian = true;
 	m_compressedImage = false;
+
 	m_signedImage = false;
     m_dicomFileReadSuccess = false;
     m_readingDataElements = true;
@@ -301,8 +302,6 @@ void CDecoder::AddInfo(const unsigned int& tag, string& value){
 		valueRepresentation = m_vr;
 	}
 
-	
-
 	switch(valueRepresentation){
 
 
@@ -310,9 +309,10 @@ void CDecoder::AddInfo(const unsigned int& tag, string& value){
 		case CS:
 		case PN:
 		case DA:
-		case DS:{
+		case DS:
+		case UI:{
 
-			value.assign(GetString()); 
+ 			value.assign(GetString()); 
 			break;
 		}
 
@@ -339,7 +339,6 @@ void CDecoder::AddInfo(const unsigned int& tag, string& value){
 		case SS:
 		case ST:
 		case TM:
-		case UI:
 		case UL:{
 			
 			// dummy
@@ -352,15 +351,7 @@ void CDecoder::AddInfo(const unsigned int& tag, string& value){
 
 
 		case US:{
-				
-			char *buf = new char[m_elementLength+1];
-			unsigned short num = ReadUShort();
-			itoa(num, buf, 10);
-			buf[m_elementLength] =0;
-			value.assign(buf);
-
-			break;
-
+			// in ReadFile(QString) method
 		}
 
 		case QQ:{
@@ -426,6 +417,21 @@ void CDecoder::ReadFile(QString path){
 				
 				switch (m_tag)
 				{
+
+				case TRANSFER_SYNTAX_UID:{
+					
+					AddInfo(tag, dummyString);
+					if(dummyString.compare("1.2.4")==0 || dummyString.compare("1.2.5")==0)
+				    {
+                            m_compressedImage = true;
+                    }
+
+                    if (dummyString.compare("1.2.840.10008.1.2.2")== 0)
+                    {
+                            m_littleEndian = false;
+                    }
+                    break;
+				}
 
 					case PATIENTS_NAME:{
 
@@ -548,10 +554,10 @@ void CDecoder::ReadFile(QString path){
 					}
 
 					case PIXEL_DATA:{
+
 						if(!m_compressedImage){
-						
-							int i;
-							i=0;
+							
+
 						}
 						else{
 						
