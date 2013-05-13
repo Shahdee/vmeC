@@ -6,7 +6,7 @@
 #include <QGraphicsview>
 #include "ui_vme.h"
 
-#include "Decoder.h"
+#include "DicomDecoder.h"
 
 class vme : public QMainWindow
 {
@@ -17,7 +17,7 @@ public:
 
 	~vme();
 
-	CDecoder obj;
+	CDicomDecoder obj;
 
 private:
 	Ui::vmeClass ui;

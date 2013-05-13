@@ -65,10 +65,10 @@
     <ClCompile Include="DicomDictionary.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_Decoder.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_DicomDecoder.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_Decoder.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_DicomDecoder.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
@@ -78,9 +78,6 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_vme.h">
       <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DicomDecoder.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JpegDecoder.h">
       <Filter>Header Files</Filter>
@@ -100,6 +97,9 @@
       <Filter>Resource Files</Filter>
     </CustomBuild>
     <CustomBuild Include="Decoder.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DicomDecoder.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>
