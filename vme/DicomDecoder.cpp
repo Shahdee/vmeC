@@ -4,9 +4,16 @@
 #include <string>
 #include <sstream>
 
+using namespace std;
+
 CDicomDecoder::CDicomDecoder(void)
 {
-	m_littleEndian = true;
+	m_littleEndian = true;  // wtf
+
+	m_ImplVRLittleEnd = false;
+	m_ExpVRLittleEnd = false;
+	m_ExpVRBigEnd = false;
+
 	m_compressedImage = false;
 
 	m_signedImage = false;
@@ -31,8 +38,6 @@ CDicomDecoder::CDicomDecoder(void)
 	m_inSequence = false;
 	m_itemDelimiter = false;
 	m_sequenceDelimiter = false ;
-
-
 }
 
 
@@ -42,12 +47,11 @@ CDicomDecoder::~CDicomDecoder(void)
 }
 
 string CDicomDecoder::GetString(int size){
-	
+
 	char* buff = new char[size];
 	m_dicomFile.read(buff, size);
 	m_location+=size;
 	return buff;
-
 }
 
 unsigned char CDicomDecoder::ReadByte(){
@@ -355,7 +359,6 @@ void CDicomDecoder::AddInfo(const unsigned int& tag, string& value){
 			SkipBytes(m_elementLength);
 			break;
 			// --e
-				
 		}
 
 
@@ -369,6 +372,81 @@ void CDicomDecoder::AddInfo(const unsigned int& tag, string& value){
 			SkipBytes(m_elementLength);
 			break;
 			// --e
+		}
+	}
+}
+
+template<class T>
+void CDicomDecoder::FillPixelBuffer(std::vector<T>* buffer){
+	
+	unsigned int n = m_width*m_height;
+
+	for(unsigned int i=0; i<n; i++){
+		if(m_vr==OW){
+			unsigned short val = ReadUShort();
+			buffer->push_back(val);
+		}
+		else{
+			unsigned char val = ReadByte();
+			buffer->push_back(val);
+			
+		}
+	}
+}
+
+// optimize it please later! Di
+void CDicomDecoder::ReadPixelData(){
+	
+	if(m_ImplVRLittleEnd){
+		
+		switch(m_vr){
+		
+			case OW: {// ow + lit end
+				std::vector<unsigned short>* buffer = new vector<unsigned short>;
+				FillPixelBuffer(buffer);
+				break;
+			}
+			case OB: {// wrong case
+				break;
+			}
+			default: break;
+		}
+	}
+	else{
+		if(m_ExpVRLittleEnd){
+
+			if(m_bitsAllocated > 8){
+							
+				switch(m_vr){
+		
+					case OW: {// ow + lit end
+						std::vector<unsigned short>* buffer = new vector<unsigned short>;
+						FillPixelBuffer(buffer);
+						break;
+					}
+					case OB: {// wrong case
+						break;
+					}
+					default: break;
+				}
+			}
+			else{ // <=8
+				
+				switch(m_vr){
+		
+					case OW: { // ow + lit end
+						std::vector<unsigned short>* buffer  = new vector<unsigned short>;
+						FillPixelBuffer(buffer);
+						break;
+					}
+					case OB: {// ob + lit end
+						std::vector<unsigned char>* buffer = new vector<unsigned char>;
+						FillPixelBuffer(buffer);
+						break;
+					}
+					default: break;
+				}
+			}
 		}
 	}
 }
@@ -429,15 +507,22 @@ void CDicomDecoder::ReadFile(QString path){
 				case TRANSFER_SYNTAX_UID:{
 					
 					AddInfo(tag, dummyString);
-					if(dummyString.compare("1.2.4")==0 || dummyString.compare("1.2.5")==0)
-				    {
-                            m_compressedImage = true;
+					if(dummyString.compare("1.2.4")==0 || dummyString.compare("1.2.5")==0){
+							m_compressedImage = true;
                     }
-
-                    if (dummyString.compare("1.2.840.10008.1.2.2")== 0)
-                    {
+					if (dummyString.compare(ExplicitVRBigEndian) == 0){
                             m_littleEndian = false;
+							m_ExpVRBigEnd = true;
                     }
+					else
+						if(dummyString.compare(ImplicitVRLittleEndianDefaultTS) == 0){
+							m_ImplVRLittleEnd = true;
+						}
+						else{
+							if(dummyString.compare(ExplicitVRLittleEndian) == 0){
+								m_ExpVRLittleEnd = true;
+							}
+						}
                     break;
 				}
 
@@ -460,20 +545,15 @@ void CDicomDecoder::ReadFile(QString path){
 
 						AddInfo(tag, m_patientsSex);
 						break;
-
 					}
                     
 					case BITS_ALLOCATED:{
 						
 						m_bitsAllocated = ReadUShort();
 						break;
-
 					}
 
 					case ROWS:{
-
-						//AddInfo(tag, dummyString);
-						//m_width = atoi(dummyString.c_str());
 
 						m_width = ReadUShort();
 						break;
@@ -481,12 +561,8 @@ void CDicomDecoder::ReadFile(QString path){
 
 					case COLUMNS:{
 
-						//AddInfo(tag, dummyString);
-						//m_height = atoi(dummyString.c_str());
-
 						m_height = ReadUShort();
 						break;
-							 
 					}
 
 					case IMAGE_POSITION:{
@@ -529,8 +605,7 @@ void CDicomDecoder::ReadFile(QString path){
 
 					case SAMPLES_PER_PIXEL:{
 						
-						AddInfo(tag, dummyString);
-						m_samplesPerPixel = atoi(dummyString.c_str());
+						m_samplesPerPixel = ReadUShort();
 						break;
 					}
 
@@ -565,12 +640,10 @@ void CDicomDecoder::ReadFile(QString path){
 
 						if(!m_compressedImage){
 							
-							int i;
-							i=0;
+							ReadPixelData();
 						}
 						else{
-							int i;
-							i=0;
+							//Place JPEG Decoder here
 						}
 					}
 
@@ -581,17 +654,21 @@ void CDicomDecoder::ReadFile(QString path){
 					}
 				}
 			}
-
 		}
 	}
 }
-
 
 const string CDicomDecoder::DICM = "DICM";
 
 double CDicomDecoder::m_pixelDepth = 1.0;
 double CDicomDecoder::m_pixelWidth = 1.0;
 double CDicomDecoder::m_pixelHeight = 1.0f;
+
+
+const string CDicomDecoder::ImplicitVRLittleEndianDefaultTS ="1.2.840.10008.1.2";
+const string CDicomDecoder::ExplicitVRLittleEndian ="1.2.840.10008.1.2.1";
+const string CDicomDecoder::ExplicitVRBigEndian = "1.2.840.10008.1.2.2";
+
 
 const map<unsigned int, string> CDicomDecoder::tagDictionary = CDicomDictionary::InitTagMap();
 

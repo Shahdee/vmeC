@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1300</width>
+    <width>1232</width>
     <height>800</height>
    </rect>
   </property>
@@ -53,7 +53,7 @@
       <height>16777215</height>
      </size>
     </property>
-    <widget class="QTabWidget" name="m_imagesPlane">
+    <widget class="CImagePlane" name="m_imagesPlane">
      <property name="enabled">
       <bool>true</bool>
      </property>
@@ -69,7 +69,7 @@
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <property name="movable">
       <bool>true</bool>
@@ -317,7 +317,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1300</width>
+     <width>1232</width>
      <height>21</height>
     </rect>
    </property>
@@ -393,6 +393,14 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>CImagePlane</class>
+   <extends>QTabWidget</extends>
+   <header location="global">ImagePlane.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="vme.qrc"/>
  </resources>

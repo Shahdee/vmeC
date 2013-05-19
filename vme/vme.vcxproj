@@ -99,8 +99,10 @@
     <ClCompile Include="GeneratedFiles\Release\moc_vme.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="ImagePlane.cpp" />
     <ClCompile Include="JpegDecoder.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Presenter.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -136,7 +138,9 @@
     </CustomBuild>
     <ClInclude Include="DicomDictionary.h" />
     <ClInclude Include="GeneratedFiles\ui_vme.h" />
+    <ClInclude Include="ImagePlane.h" />
     <ClInclude Include="JpegDecoder.h" />
+    <ClInclude Include="Presenter.h" />
     <ClInclude Include="stdafx.h" />
     <CustomBuild Include="vme.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

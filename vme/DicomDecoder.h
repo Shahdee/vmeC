@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "stdafx.h"
@@ -16,7 +14,6 @@ using namespace std;
 
 class CDicomDecoder : public CDecoder, public QObject
 {
-
 	Q_OBJECT
 
 public:
@@ -96,6 +93,12 @@ static const int
 static const map<unsigned int, string> tagDictionary;
 
 
+static const string ImplicitVRLittleEndianDefaultTS;
+static const string ExplicitVRLittleEndian;
+static const string ExplicitVRBigEndian;
+
+
+
 /*There are three special SQ related Data Elements that are not ruled by the VR encoding rules
 conveyed by the Transfer Syntax. They shall be encoded as Implicit VR. NEMA DICOM 3.0*/
 static const unsigned int ITEM = 0xFFFEE000;
@@ -127,6 +130,11 @@ private:
 	bool m_sequenceDelimiter;
 
 	bool m_littleEndian;
+
+	bool m_ImplVRLittleEnd;
+	bool m_ExpVRLittleEnd;
+	bool m_ExpVRBigEnd;
+
 	bool m_delimiter;
 
 	int m_elementLength; // because can be negative despite the fact that is a length value
@@ -172,6 +180,10 @@ private:
 
 	unsigned char ReadByte();
 
+	template<class T>
+	void FillPixelBuffer(std::vector<T>* buffer);
+
+	void ReadPixelData();
 	void ReadSequence();
 	void ReadItem();
 	void TrySkipSequence();
@@ -187,8 +199,8 @@ public:
 
 	unsigned short m_bitsAllocated;
 
-	int m_width;
-	int m_height;
+	unsigned short m_width;
+	unsigned short m_height;
 
 	int m_nImages;
 	int m_samplesPerPixel;
