@@ -7,6 +7,7 @@ vme::vme(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 	ui.setupUi(this);
 	QObject::connect(ui.m_tbarOpenImageButton, SIGNAL(triggered()), this, SLOT(GetFilePath()));
 	QObject::connect(ui.m_tbarExitButton, SIGNAL(triggered()), this , SLOT(close()));
+
 }
 
 
