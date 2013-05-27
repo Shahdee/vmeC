@@ -31,8 +31,6 @@ CDicomDecoder::CDicomDecoder(void)
 	m_inSequence = false;
 	m_itemDelimiter = false;
 	m_sequenceDelimiter = false ;
-
-
 }
 
 
