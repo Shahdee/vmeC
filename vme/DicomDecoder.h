@@ -222,9 +222,7 @@ public:
 
 	string m_unit;
 
-public slots:
-
-	void ReadFile(QString); 
+	bool ReadFile(QString); 
 };
 
 

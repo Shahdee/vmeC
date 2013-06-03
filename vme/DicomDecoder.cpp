@@ -4,6 +4,8 @@
 #include <string>
 #include <sstream>
 
+//#include <QtOpenGL> 
+
 using namespace std;
 
 CDicomDecoder::CDicomDecoder(void)
@@ -404,6 +406,7 @@ void CDicomDecoder::ReadPixelData(){
 			case OW: {// ow + lit end
 				std::vector<unsigned short>* buffer = new vector<unsigned short>;
 				FillPixelBuffer(buffer);
+				delete buffer;
 				break;
 			}
 			case OB: {// wrong case
@@ -422,6 +425,7 @@ void CDicomDecoder::ReadPixelData(){
 					case OW: {// ow + lit end
 						std::vector<unsigned short>* buffer = new vector<unsigned short>;
 						FillPixelBuffer(buffer);
+						delete buffer;
 						break;
 					}
 					case OB: {// wrong case
@@ -437,11 +441,13 @@ void CDicomDecoder::ReadPixelData(){
 					case OW: { // ow + lit end
 						std::vector<unsigned short>* buffer  = new vector<unsigned short>;
 						FillPixelBuffer(buffer);
+						delete buffer;
 						break;
 					}
 					case OB: {// ob + lit end
 						std::vector<unsigned char>* buffer = new vector<unsigned char>;
 						FillPixelBuffer(buffer);
+						delete buffer;
 						break;
 					}
 					default: break;
@@ -452,7 +458,7 @@ void CDicomDecoder::ReadPixelData(){
 }
 
 // it is assumed that DICOM default transfer syntax is implicit VR, little endian
-void CDicomDecoder::ReadFile(QString path){
+bool CDicomDecoder::ReadFile(QString path){
 
 	string dummyString; // dummy
 
@@ -471,7 +477,7 @@ void CDicomDecoder::ReadFile(QString path){
 
 		if(CDicomDecoder::DICM.compare(0, 4, dicom)!=0){
 
-			return;
+			return false;
 		}
 		else{
 			
@@ -504,27 +510,28 @@ void CDicomDecoder::ReadFile(QString path){
 				switch (m_tag)
 				{
 
-				case TRANSFER_SYNTAX_UID:{
+					case TRANSFER_SYNTAX_UID:{
 					
-					AddInfo(tag, dummyString);
-					if(dummyString.compare("1.2.4")==0 || dummyString.compare("1.2.5")==0){
+						AddInfo(tag, dummyString);
+						if(dummyString.compare("1.2.4")==0 || dummyString.compare("1.2.5")==0){
 							m_compressedImage = true;
-                    }
-					if (dummyString.compare(ExplicitVRBigEndian) == 0){
+						}
+						if (dummyString.compare(ExplicitVRBigEndian) == 0){
                             m_littleEndian = false;
 							m_ExpVRBigEnd = true;
-                    }
-					else
-						if(dummyString.compare(ImplicitVRLittleEndianDefaultTS) == 0){
-							m_ImplVRLittleEnd = true;
 						}
 						else{
-							if(dummyString.compare(ExplicitVRLittleEndian) == 0){
-								m_ExpVRLittleEnd = true;
+							if(dummyString.compare(ImplicitVRLittleEndianDefaultTS) == 0){
+								m_ImplVRLittleEnd = true;
+							}
+							else{
+								if(dummyString.compare(ExplicitVRLittleEndian) == 0){
+									m_ExpVRLittleEnd = true;
+								}
 							}
 						}
-                    break;
-				}
+						break;
+					}
 
 					case PATIENTS_NAME:{
 
@@ -645,6 +652,9 @@ void CDicomDecoder::ReadFile(QString path){
 						else{
 							//Place JPEG Decoder here
 						}
+
+						m_readingDataElements = false;
+						return true;
 					}
 
 					default:{
@@ -654,6 +664,9 @@ void CDicomDecoder::ReadFile(QString path){
 					}
 				}
 			}
+
+			// send signal about page update
+			 
 		}
 	}
 }

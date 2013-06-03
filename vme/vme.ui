@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1232</width>
+    <width>1125</width>
     <height>800</height>
    </rect>
   </property>
@@ -59,27 +59,33 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>550</x>
-       <y>20</y>
-       <width>521</width>
-       <height>511</height>
+       <x>490</x>
+       <y>50</y>
+       <width>560</width>
+       <height>560</height>
       </rect>
      </property>
      <property name="tabShape">
       <enum>QTabWidget::Rounded</enum>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>16</width>
+       <height>16</height>
+      </size>
      </property>
      <property name="movable">
       <bool>true</bool>
      </property>
-     <widget class="QWidget" name="m_2dTab">
+     <widget class="CFlatPlane" name="m_2dTab">
       <attribute name="title">
        <string>2D stack</string>
       </attribute>
      </widget>
-     <widget class="QWidget" name="m_3dTab">
+     <widget class="CVolumePlane" name="m_3dTab">
       <attribute name="title">
        <string>3D model</string>
       </attribute>
@@ -317,7 +323,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1232</width>
+     <width>1125</width>
      <height>21</height>
     </rect>
    </property>
@@ -398,6 +404,18 @@
    <class>CImagePlane</class>
    <extends>QTabWidget</extends>
    <header location="global">ImagePlane.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CFlatPlane</class>
+   <extends>QWidget</extends>
+   <header location="global">FlatPlane.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CVolumePlane</class>
+   <extends>QWidget</extends>
+   <header location="global">VolumePlane.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
