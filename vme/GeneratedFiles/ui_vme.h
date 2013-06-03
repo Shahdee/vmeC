@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'vme.ui'
 **
-** Created: Sat May 18 10:05:14 2013
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Tue 28. May 02:56:53 2013
+**      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -11,6 +11,7 @@
 #define UI_VME_H
 
 #include <ImagePlane.h>
+#include <Plane.h>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
@@ -43,7 +44,7 @@ public:
     QWidget *centralWidget;
     QWidget *m_mainSurface;
     CImagePlane *m_imagesPlane;
-    QWidget *m_2dTab;
+    CPlane *m_2dTab;
     QWidget *m_3dTab;
     QToolBar *mainToolBar;
     QStatusBar *m_statusBar;
@@ -99,22 +100,19 @@ public:
         m_mainSurface->setEnabled(true);
         m_mainSurface->setGeometry(QRect(-350, -10, 1291, 771));
         m_mainSurface->setMaximumSize(QSize(16777215, 16777215));
-       
-		m_imagesPlane = new CImagePlane(m_mainSurface);
+        m_imagesPlane = new CImagePlane(m_mainSurface);
         m_imagesPlane->setObjectName(QString::fromUtf8("m_imagesPlane"));
         m_imagesPlane->setEnabled(true);
         m_imagesPlane->setGeometry(QRect(550, 20, 521, 511));
         m_imagesPlane->setTabShape(QTabWidget::Rounded);
         m_imagesPlane->setMovable(true);
-
-        m_2dTab = new QWidget();
+        m_2dTab = new CPlane(m_imagesPlane);
         m_2dTab->setObjectName(QString::fromUtf8("m_2dTab"));
         m_imagesPlane->addTab(m_2dTab, QString());
         m_3dTab = new QWidget();
         m_3dTab->setObjectName(QString::fromUtf8("m_3dTab"));
         m_imagesPlane->addTab(m_3dTab, QString());
-       
-		vmeClass->setCentralWidget(centralWidget);
+        vmeClass->setCentralWidget(centralWidget);
         mainToolBar = new QToolBar(vmeClass);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
         mainToolBar->setEnabled(true);

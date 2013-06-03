@@ -13,8 +13,6 @@ public:
 
  private:
 
- QWidget* m_p2d;
- QWidget* m_p3d;
-	
+ 
 };
 
