@@ -2,6 +2,7 @@
 #include "vme.h"
 #include <QtGui>
 
+
 vme::vme(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 {
 	ui.setupUi(this);
@@ -14,9 +15,11 @@ vme::vme(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 void vme::GetFilePath()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Files (*.*)"));
-	obj.ReadFile(path);
-}
+	if(obj.ReadFile(path))
+	{
 
+	}
+}
 
 vme::~vme(){}
 

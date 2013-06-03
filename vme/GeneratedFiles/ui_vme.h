@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'vme.ui'
 **
-** Created: Tue 28. May 02:56:53 2013
-**      by: Qt User Interface Compiler version 4.8.2
+** Created: Sun May 26 01:15:03 2013
+**      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,8 +10,8 @@
 #ifndef UI_VME_H
 #define UI_VME_H
 
+#include <FlatPlane.h>
 #include <ImagePlane.h>
-#include <Plane.h>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
@@ -28,6 +28,7 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QTreeView>
 #include <QtGui/QWidget>
+#include <VolumePlane.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -44,8 +45,8 @@ public:
     QWidget *centralWidget;
     QWidget *m_mainSurface;
     CImagePlane *m_imagesPlane;
-    CPlane *m_2dTab;
-    QWidget *m_3dTab;
+    CFlatPlane *m_2dTab;
+    CVolumePlane *m_3dTab;
     QToolBar *mainToolBar;
     QStatusBar *m_statusBar;
     QDockWidget *m_visPanel;
@@ -70,7 +71,7 @@ public:
         if (vmeClass->objectName().isEmpty())
             vmeClass->setObjectName(QString::fromUtf8("vmeClass"));
         vmeClass->setEnabled(true);
-        vmeClass->resize(1232, 800);
+        vmeClass->resize(1125, 800);
         QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -103,13 +104,14 @@ public:
         m_imagesPlane = new CImagePlane(m_mainSurface);
         m_imagesPlane->setObjectName(QString::fromUtf8("m_imagesPlane"));
         m_imagesPlane->setEnabled(true);
-        m_imagesPlane->setGeometry(QRect(550, 20, 521, 511));
+        m_imagesPlane->setGeometry(QRect(490, 50, 560, 560));
         m_imagesPlane->setTabShape(QTabWidget::Rounded);
+        m_imagesPlane->setIconSize(QSize(16, 16));
         m_imagesPlane->setMovable(true);
-        m_2dTab = new CPlane(m_imagesPlane);
+        m_2dTab = new CFlatPlane();
         m_2dTab->setObjectName(QString::fromUtf8("m_2dTab"));
         m_imagesPlane->addTab(m_2dTab, QString());
-        m_3dTab = new QWidget();
+        m_3dTab = new CVolumePlane();
         m_3dTab->setObjectName(QString::fromUtf8("m_3dTab"));
         m_imagesPlane->addTab(m_3dTab, QString());
         vmeClass->setCentralWidget(centralWidget);
@@ -177,7 +179,7 @@ public:
         m_menuBar = new QMenuBar(vmeClass);
         m_menuBar->setObjectName(QString::fromUtf8("m_menuBar"));
         m_menuBar->setEnabled(true);
-        m_menuBar->setGeometry(QRect(0, 0, 1232, 21));
+        m_menuBar->setGeometry(QRect(0, 0, 1125, 21));
         m_menuBar->setLayoutDirection(Qt::LeftToRight);
         menuFIle = new QMenu(m_menuBar);
         menuFIle->setObjectName(QString::fromUtf8("menuFIle"));
