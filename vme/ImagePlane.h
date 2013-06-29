@@ -15,8 +15,7 @@ public:
 
  private:
 
- QWidget* m_p2d; // no need 
- QWidget* m_p3d; // no need
+
 	
 };
 

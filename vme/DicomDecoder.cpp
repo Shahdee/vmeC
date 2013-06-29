@@ -391,7 +391,6 @@ void CDicomDecoder::FillPixelBuffer(std::vector<T>* buffer){
 		else{
 			unsigned char val = ReadByte();
 			buffer->push_back(val);
-			
 		}
 	}
 }

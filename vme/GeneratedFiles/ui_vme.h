@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'vme.ui'
 **
-** Created: Sat Jun 8 13:56:38 2013
-**      by: Qt User Interface Compiler version 4.8.1
+** Created: Sat 29. Jun 16:02:46 2013
+**      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -10,7 +10,6 @@
 #ifndef UI_VME_H
 #define UI_VME_H
 
-#include <FlatPlane.h>
 #include <ImagePlane.h>
 #include <QtCore/QVariant>
 #include <QtGui/QAction>
@@ -26,22 +25,22 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QStatusBar>
 #include <QtGui/QToolBar>
-#include <QtGui/QTreeView>
 #include <QtGui/QWidget>
-#include <VolumePlane.h>
+#include "FlatPlane.h"
+#include "VolumePlane.h"
 
 QT_BEGIN_NAMESPACE
 
 class Ui_vmeClass
 {
 public:
-    QAction *m_tbarOpeStudyButton;
     QAction *m_tbarOpenImageButton;
     QAction *actionMy;
     QAction *actionKid_s_head;
     QAction *actionSave_settings;
     QAction *actionLoad_settings;
     QAction *m_tbarExitButton;
+    QAction *m_tbarOpeStudyButton;
     QWidget *centralWidget;
     QWidget *m_mainSurface;
     CImagePlane *m_imagesPlane;
@@ -52,14 +51,12 @@ public:
     QDockWidget *m_visPanel;
     QWidget *dockWidgetContents_2;
     QGraphicsView *m_visTF;
-    QTreeView *treeView;
-    QFrame *frame;
+    QPushButton *m_vis3D;
     QPushButton *m_visLoadButton;
+    QPushButton *m_visSaveButton;
     QPushButton *m_visDefaultButton;
     QPushButton *m_visUpdateButton;
-    QPushButton *m_visSaveButton;
     QFrame *line;
-    QPushButton *m_vis3D;
     QMenuBar *m_menuBar;
     QMenu *menuFIle;
     QMenu *menuTest;
@@ -71,16 +68,14 @@ public:
         if (vmeClass->objectName().isEmpty())
             vmeClass->setObjectName(QString::fromUtf8("vmeClass"));
         vmeClass->setEnabled(true);
-        vmeClass->resize(1125, 800);
-        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        vmeClass->resize(909, 613);
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(vmeClass->sizePolicy().hasHeightForWidth());
         vmeClass->setSizePolicy(sizePolicy);
-        vmeClass->setMinimumSize(QSize(1024, 768));
+        vmeClass->setMinimumSize(QSize(909, 613));
         vmeClass->setTabShape(QTabWidget::Rounded);
-        m_tbarOpeStudyButton = new QAction(vmeClass);
-        m_tbarOpeStudyButton->setObjectName(QString::fromUtf8("m_tbarOpeStudyButton"));
         m_tbarOpenImageButton = new QAction(vmeClass);
         m_tbarOpenImageButton->setObjectName(QString::fromUtf8("m_tbarOpenImageButton"));
         actionMy = new QAction(vmeClass);
@@ -93,6 +88,8 @@ public:
         actionLoad_settings->setObjectName(QString::fromUtf8("actionLoad_settings"));
         m_tbarExitButton = new QAction(vmeClass);
         m_tbarExitButton->setObjectName(QString::fromUtf8("m_tbarExitButton"));
+        m_tbarOpeStudyButton = new QAction(vmeClass);
+        m_tbarOpeStudyButton->setObjectName(QString::fromUtf8("m_tbarOpeStudyButton"));
         centralWidget = new QWidget(vmeClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         centralWidget->setEnabled(true);
@@ -104,7 +101,8 @@ public:
         m_imagesPlane = new CImagePlane(m_mainSurface);
         m_imagesPlane->setObjectName(QString::fromUtf8("m_imagesPlane"));
         m_imagesPlane->setEnabled(true);
-        m_imagesPlane->setGeometry(QRect(490, 50, 560, 560));
+        m_imagesPlane->setGeometry(QRect(360, 10, 560, 560));
+        m_imagesPlane->setMinimumSize(QSize(0, 0));
         m_imagesPlane->setTabShape(QTabWidget::Rounded);
         m_imagesPlane->setIconSize(QSize(16, 16));
         m_imagesPlane->setMovable(true);
@@ -115,6 +113,8 @@ public:
         m_3dTab->setObjectName(QString::fromUtf8("m_3dTab"));
         m_imagesPlane->addTab(m_3dTab, QString());
         vmeClass->setCentralWidget(centralWidget);
+        m_mainSurface->raise();
+        m_imagesPlane->raise();
         mainToolBar = new QToolBar(vmeClass);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
         mainToolBar->setEnabled(true);
@@ -125,7 +125,9 @@ public:
         vmeClass->setStatusBar(m_statusBar);
         m_visPanel = new QDockWidget(vmeClass);
         m_visPanel->setObjectName(QString::fromUtf8("m_visPanel"));
-        m_visPanel->setMinimumSize(QSize(350, 38));
+        sizePolicy.setHeightForWidth(m_visPanel->sizePolicy().hasHeightForWidth());
+        m_visPanel->setSizePolicy(sizePolicy);
+        m_visPanel->setMinimumSize(QSize(320, 56));
         m_visPanel->setMaximumSize(QSize(350, 524287));
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
@@ -145,41 +147,35 @@ public:
         dockWidgetContents_2->setObjectName(QString::fromUtf8("dockWidgetContents_2"));
         m_visTF = new QGraphicsView(dockWidgetContents_2);
         m_visTF->setObjectName(QString::fromUtf8("m_visTF"));
-        m_visTF->setGeometry(QRect(20, 20, 300, 200));
-        treeView = new QTreeView(dockWidgetContents_2);
-        treeView->setObjectName(QString::fromUtf8("treeView"));
-        treeView->setGeometry(QRect(20, 599, 300, 111));
-        frame = new QFrame(dockWidgetContents_2);
-        frame->setObjectName(QString::fromUtf8("frame"));
-        frame->setGeometry(QRect(20, 240, 300, 331));
-        frame->setFrameShape(QFrame::Panel);
-        frame->setFrameShadow(QFrame::Raised);
-        m_visLoadButton = new QPushButton(frame);
+        m_visTF->setGeometry(QRect(10, 10, 300, 200));
+        sizePolicy.setHeightForWidth(m_visTF->sizePolicy().hasHeightForWidth());
+        m_visTF->setSizePolicy(sizePolicy);
+        m_vis3D = new QPushButton(dockWidgetContents_2);
+        m_vis3D->setObjectName(QString::fromUtf8("m_vis3D"));
+        m_vis3D->setGeometry(QRect(130, 430, 51, 23));
+        m_visLoadButton = new QPushButton(dockWidgetContents_2);
         m_visLoadButton->setObjectName(QString::fromUtf8("m_visLoadButton"));
-        m_visLoadButton->setGeometry(QRect(30, 290, 51, 23));
-        m_visDefaultButton = new QPushButton(frame);
-        m_visDefaultButton->setObjectName(QString::fromUtf8("m_visDefaultButton"));
-        m_visDefaultButton->setGeometry(QRect(210, 290, 51, 23));
-        m_visUpdateButton = new QPushButton(frame);
-        m_visUpdateButton->setObjectName(QString::fromUtf8("m_visUpdateButton"));
-        m_visUpdateButton->setGeometry(QRect(150, 290, 51, 23));
-        m_visSaveButton = new QPushButton(frame);
+        m_visLoadButton->setGeometry(QRect(40, 490, 51, 23));
+        m_visSaveButton = new QPushButton(dockWidgetContents_2);
         m_visSaveButton->setObjectName(QString::fromUtf8("m_visSaveButton"));
-        m_visSaveButton->setGeometry(QRect(90, 290, 51, 23));
-        line = new QFrame(frame);
+        m_visSaveButton->setGeometry(QRect(100, 490, 51, 23));
+        m_visDefaultButton = new QPushButton(dockWidgetContents_2);
+        m_visDefaultButton->setObjectName(QString::fromUtf8("m_visDefaultButton"));
+        m_visDefaultButton->setGeometry(QRect(220, 490, 51, 23));
+        m_visUpdateButton = new QPushButton(dockWidgetContents_2);
+        m_visUpdateButton->setObjectName(QString::fromUtf8("m_visUpdateButton"));
+        m_visUpdateButton->setGeometry(QRect(160, 490, 51, 23));
+        line = new QFrame(dockWidgetContents_2);
         line->setObjectName(QString::fromUtf8("line"));
-        line->setGeometry(QRect(40, 270, 211, 20));
+        line->setGeometry(QRect(50, 460, 211, 20));
         line->setFrameShape(QFrame::HLine);
         line->setFrameShadow(QFrame::Sunken);
-        m_vis3D = new QPushButton(frame);
-        m_vis3D->setObjectName(QString::fromUtf8("m_vis3D"));
-        m_vis3D->setGeometry(QRect(120, 80, 51, 23));
         m_visPanel->setWidget(dockWidgetContents_2);
         vmeClass->addDockWidget(static_cast<Qt::DockWidgetArea>(1), m_visPanel);
         m_menuBar = new QMenuBar(vmeClass);
         m_menuBar->setObjectName(QString::fromUtf8("m_menuBar"));
         m_menuBar->setEnabled(true);
-        m_menuBar->setGeometry(QRect(0, 0, 1125, 21));
+        m_menuBar->setGeometry(QRect(0, 0, 909, 21));
         m_menuBar->setLayoutDirection(Qt::LeftToRight);
         menuFIle = new QMenu(m_menuBar);
         menuFIle->setObjectName(QString::fromUtf8("menuFIle"));
@@ -205,7 +201,7 @@ public:
 
         retranslateUi(vmeClass);
 
-        m_imagesPlane->setCurrentIndex(1);
+        m_imagesPlane->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(vmeClass);
@@ -214,21 +210,21 @@ public:
     void retranslateUi(QMainWindow *vmeClass)
     {
         vmeClass->setWindowTitle(QApplication::translate("vmeClass", "volume medical engine", 0, QApplication::UnicodeUTF8));
-        m_tbarOpeStudyButton->setText(QApplication::translate("vmeClass", "Open study", 0, QApplication::UnicodeUTF8));
         m_tbarOpenImageButton->setText(QApplication::translate("vmeClass", "Open Image", 0, QApplication::UnicodeUTF8));
         actionMy->setText(QApplication::translate("vmeClass", "my", 0, QApplication::UnicodeUTF8));
         actionKid_s_head->setText(QApplication::translate("vmeClass", "kid's head", 0, QApplication::UnicodeUTF8));
         actionSave_settings->setText(QApplication::translate("vmeClass", "Save settings", 0, QApplication::UnicodeUTF8));
         actionLoad_settings->setText(QApplication::translate("vmeClass", "Load settings", 0, QApplication::UnicodeUTF8));
         m_tbarExitButton->setText(QApplication::translate("vmeClass", "Exit", 0, QApplication::UnicodeUTF8));
+        m_tbarOpeStudyButton->setText(QApplication::translate("vmeClass", "Open study", 0, QApplication::UnicodeUTF8));
         m_imagesPlane->setTabText(m_imagesPlane->indexOf(m_2dTab), QApplication::translate("vmeClass", "2D stack", 0, QApplication::UnicodeUTF8));
         m_imagesPlane->setTabText(m_imagesPlane->indexOf(m_3dTab), QApplication::translate("vmeClass", "3D model", 0, QApplication::UnicodeUTF8));
         m_visPanel->setWindowTitle(QApplication::translate("vmeClass", "Visual panel", 0, QApplication::UnicodeUTF8));
+        m_vis3D->setText(QApplication::translate("vmeClass", "3D", 0, QApplication::UnicodeUTF8));
         m_visLoadButton->setText(QApplication::translate("vmeClass", "Load", 0, QApplication::UnicodeUTF8));
+        m_visSaveButton->setText(QApplication::translate("vmeClass", "Save", 0, QApplication::UnicodeUTF8));
         m_visDefaultButton->setText(QApplication::translate("vmeClass", "Default", 0, QApplication::UnicodeUTF8));
         m_visUpdateButton->setText(QApplication::translate("vmeClass", "Update", 0, QApplication::UnicodeUTF8));
-        m_visSaveButton->setText(QApplication::translate("vmeClass", "Save", 0, QApplication::UnicodeUTF8));
-        m_vis3D->setText(QApplication::translate("vmeClass", "3D", 0, QApplication::UnicodeUTF8));
         menuFIle->setTitle(QApplication::translate("vmeClass", "FIle", 0, QApplication::UnicodeUTF8));
         menuTest->setTitle(QApplication::translate("vmeClass", "test", 0, QApplication::UnicodeUTF8));
         menuEdit->setTitle(QApplication::translate("vmeClass", "Edit", 0, QApplication::UnicodeUTF8));

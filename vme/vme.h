@@ -17,7 +17,7 @@ public:
 
 	~vme();
 
-	CDicomDecoder obj;
+	CDicomDecoder m_dicomDecoder;
 
 private:
 	Ui::vmeClass ui;
