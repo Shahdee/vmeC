@@ -8,28 +8,18 @@
 
 
 CFlatPlane::CFlatPlane(QWidget *parent) :  QGLWidget(QGLFormat(QGL::SampleBuffers), parent){
-
 	m_xRot = 0;
     m_yRot = 0;
     m_zRot = 0;
-
 }
 
-CFlatPlane::~CFlatPlane(void){
+CFlatPlane::~CFlatPlane(void){}
 
-}
+void CFlatPlane::setXRotation(const int & angel){}
 
-void CFlatPlane::setXRotation(const int & angel){
-	
-}
+void CFlatPlane::setYRotation(const int & angel){}
 
-void CFlatPlane::setYRotation(const int & angel){
-	
-}
-
-void CFlatPlane::setZRotation(const int & angel){
-	
-}
+void CFlatPlane::setZRotation(const int & angel){}
 
 void CFlatPlane::setupViewport(const int & width, const int & height){
 	
@@ -48,10 +38,12 @@ void CFlatPlane::setupViewport(const int & width, const int & height){
 
 void CFlatPlane::drawSurface(QPainter* painter, QPaintEvent* event){
 	
-	QBrush background = QBrush(QColor(64, 32, 64));
+	QBrush background = QBrush(QColor(255, 0, 0));
 	painter->fillRect(event->rect(), background);
+
 }
 
+/*
 void CFlatPlane::paintEvent(QPaintEvent* event){
 	
 	makeCurrent(); // Makes this widget the current widget for OpenGL operations, i.e. makes the widget's rendering context the current OpenGL rendering context.
@@ -62,13 +54,13 @@ void CFlatPlane::paintEvent(QPaintEvent* event){
 	drawSurface(painter, event);
 	
 	painter->end();
-}
+}*/
 
 void CFlatPlane::showEvent(QShowEvent* event){
 	
 }
 
-/*
+
 void CFlatPlane::initializeGL(){
 	// multisampling
 }
@@ -79,5 +71,4 @@ void  CFlatPlane::resizeGL(int width, int height){
 
 void CFlatPlane::paintGL(){
 
-	
-}*/
+}

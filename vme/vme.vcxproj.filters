@@ -77,14 +77,23 @@
     <ClCompile Include="Presenter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_Plane.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_ImagePlane.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_Plane.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_ImagePlane.cpp">
       <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="FlatPlane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_FlatPlane.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_FlatPlane.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="VolumePlane.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,10 +109,10 @@
     <ClInclude Include="DicomDictionary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImagePlane.h">
+    <ClInclude Include="Presenter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Presenter.h">
+    <ClInclude Include="VolumePlane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -123,7 +132,10 @@
     <CustomBuild Include="DicomDecoder.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="Plane.h">
+    <CustomBuild Include="ImagePlane.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FlatPlane.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
   </ItemGroup>

@@ -93,6 +93,7 @@ static const int
 static const map<unsigned int, string> tagDictionary;
 
 
+
 static const string ImplicitVRLittleEndianDefaultTS;
 static const string ExplicitVRLittleEndian;
 static const string ExplicitVRBigEndian;
@@ -181,7 +182,7 @@ private:
 	unsigned char ReadByte();
 
 	template<class T>
-	void FillPixelBuffer(std::vector<T>* buffer);
+	void FillPixelBuffer(std::vector<T>*);
 
 	void ReadPixelData();
 	void ReadSequence();
