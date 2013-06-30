@@ -28,6 +28,7 @@ protected:
 private:
 	void setupViewport(const int & width, const int & height);
 	void drawSurface(QPainter* painter, QPaintEvent* event);
+	void Axis();
 
 	int m_xRot;
 	int m_yRot;

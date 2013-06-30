@@ -62,13 +62,38 @@ void CFlatPlane::showEvent(QShowEvent* event){
 
 
 void CFlatPlane::initializeGL(){
-	// multisampling
+	qglClearColor(Qt::lightGray);
+	// Qt auto turn on z-buffer in constructor of QGLWidget
 }
 
 void  CFlatPlane::resizeGL(int width, int height){
-
+	 glMatrixMode(GL_PROJECTION); 
+	 glLoadIdentity(); 
+	 //glOrtho(-1.0, 1.0, -1.0, 1.0, -10.0, 1.0);  
+	 glOrtho(0.0f, 512.0f, 512.0f, 0.0f, -1.0, 1.0);  
+	 glViewport(0, 0, (GLint)width, (GLint)height); 
 }
 
-void CFlatPlane::paintGL(){
+/*
+ћатрица моделировани€ отвечает за наблюдение сцены; а матрица проекции за проецирование сцены, которое может быть либо ортогональным, либо перспективным.
+*/
 
+void CFlatPlane::paintGL(){
+	glClear(GL_COLOR_BUFFER_BIT); 
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	Axis();
+}
+
+void CFlatPlane::Axis(){
+   
+   glColor4f(1.00f, 0.00f, 0.00f, 1.0f);
+   glPointSize(3.0f);
+
+    glBegin(GL_POINTS);
+		for(GLint i=0; i<510; i++)
+			for(GLint j=0; j<510; j++)
+					glVertex2i(i, j);
+	glEnd();
 }
