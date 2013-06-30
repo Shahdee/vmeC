@@ -10,14 +10,13 @@ public:
 	CFlatPlane(QWidget *parent = 0);
 	~CFlatPlane(void);
 
-	 int xRotation() const { return m_xRot; }
-     int yRotation() const { return m_yRot; }
-     int zRotation() const { return m_zRot; }
+	void Axis();
+	void SetImage();
+	void SetImagePrm(const int w, const int h, const double center, const double width);
+	void SendBuffer(std::vector<unsigned short>*);
+	void ComputeLookUpTable(); 
 
 protected:
-
-	//void paintEvent(QPaintEvent *event);
-
 	void showEvent(QShowEvent *event);
 
 	//reimplemented from QGLWidget
@@ -26,18 +25,13 @@ protected:
     void paintGL();
 
 private:
-	void setupViewport(const int & width, const int & height);
-	void drawSurface(QPainter* painter, QPaintEvent* event);
-	void Axis();
+	int m_pmWidth;
+	int m_pmHeight;
+	double m_winMin;
+	double m_winMax;
+	bool m_bShowImage;
 
-	int m_xRot;
-	int m_yRot;
-	int m_zRot;
-
-public slots:
-	 void setXRotation(const int & angle);
-     void setYRotation(const int & angle);
-     void setZRotation(const int & angle);
-
+	static std::vector<unsigned short>* buffer;
+	static std::vector<unsigned char>* lut;
 };
 

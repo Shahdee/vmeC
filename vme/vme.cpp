@@ -17,8 +17,9 @@ void vme::GetFilePath()
 	
 	if(m_dicomDecoder.ReadFile(path))
 	{
-		//ui.m_3dTab->SetImageSize(m_dicomDecoder.m_width, m_dicomDecoder.m_height);
-		//ui.m_3dTab->FillPixelMap();
+		ui.m_2dTab->SetImagePrm(m_dicomDecoder.m_width, m_dicomDecoder.m_height, m_dicomDecoder.m_windowCentre, m_dicomDecoder.m_windowWidth);
+		ui.m_2dTab->SendBuffer(m_dicomDecoder.buffer);
+		ui.m_2dTab->ComputeLookUpTable();
 	}
 }
 
