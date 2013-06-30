@@ -37,7 +37,7 @@ void CFlatPlane::showEvent(QShowEvent* event){}
 
 
 void CFlatPlane::initializeGL(){
-	qglClearColor(QColor(0.5, 0, 0.5, 255));
+	qglClearColor(QColor(128, 0, 128, 255));
 }
 
 void  CFlatPlane::resizeGL(int width, int height){
@@ -60,16 +60,6 @@ void CFlatPlane::paintGL(){
 	if(m_bShowImage){
 		SetImage();
 	}
-}
-
-
-void CFlatPlane::Axis(){
-	glLineWidth(3.0f);
-	glColor3f(1.0f, 0.5f, 0.5f);
-	glBegin(GL_LINES);
-		glVertex2f(-1.0f, 0.0f);
-		glVertex2f(1.0, 0.0f);
-	glEnd();
 }
 
 void CFlatPlane::SetImagePrm(const int width, const int height, const double center, const double range ){
