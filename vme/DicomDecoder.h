@@ -91,7 +91,7 @@ static const int
             QQ = 0x3F3F;
 
 static const map<unsigned int, string> tagDictionary;
-
+static std::vector<unsigned short>* buffer;
 
 
 static const string ImplicitVRLittleEndianDefaultTS;
@@ -181,8 +181,7 @@ private:
 
 	unsigned char ReadByte();
 
-	template<class T>
-	void FillPixelBuffer(std::vector<T>*);
+	void FillPixelBuffer();
 
 	void ReadPixelData();
 	void ReadSequence();

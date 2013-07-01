@@ -95,12 +95,9 @@
       <attribute name="title">
        <string>3D model</string>
       </attribute>
-      <zorder>frame</zorder>
      </widget>
     </widget>
    </widget>
-   <zorder>m_mainSurface</zorder>
-   <zorder>m_imagesPlane</zorder>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <property name="enabled">
@@ -128,13 +125,13 @@
    <property name="minimumSize">
     <size>
      <width>320</width>
-     <height>56</height>
+     <height>560</height>
     </size>
    </property>
    <property name="maximumSize">
     <size>
-     <width>350</width>
-     <height>524287</height>
+     <width>320</width>
+     <height>560</height>
     </size>
    </property>
    <property name="palette">

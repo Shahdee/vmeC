@@ -1,8 +1,8 @@
 /********************************************************************************
 ** Form generated from reading UI file 'vme.ui'
 **
-** Created: Sat 29. Jun 16:02:46 2013
-**      by: Qt User Interface Compiler version 4.8.2
+** Created: Sun Jun 30 16:20:44 2013
+**      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -113,8 +113,6 @@ public:
         m_3dTab->setObjectName(QString::fromUtf8("m_3dTab"));
         m_imagesPlane->addTab(m_3dTab, QString());
         vmeClass->setCentralWidget(centralWidget);
-        m_mainSurface->raise();
-        m_imagesPlane->raise();
         mainToolBar = new QToolBar(vmeClass);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
         mainToolBar->setEnabled(true);
@@ -127,8 +125,8 @@ public:
         m_visPanel->setObjectName(QString::fromUtf8("m_visPanel"));
         sizePolicy.setHeightForWidth(m_visPanel->sizePolicy().hasHeightForWidth());
         m_visPanel->setSizePolicy(sizePolicy);
-        m_visPanel->setMinimumSize(QSize(320, 56));
-        m_visPanel->setMaximumSize(QSize(350, 524287));
+        m_visPanel->setMinimumSize(QSize(320, 560));
+        m_visPanel->setMaximumSize(QSize(320, 560));
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
         brush.setStyle(Qt::SolidPattern);

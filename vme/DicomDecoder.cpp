@@ -378,19 +378,24 @@ void CDicomDecoder::AddInfo(const unsigned int& tag, string& value){
 	}
 }
 
-template<class T>
-void CDicomDecoder::FillPixelBuffer(std::vector<T>* buffer){
+void CDicomDecoder::FillPixelBuffer(){
 	
 	unsigned int n = m_width*m_height;
 
 	for(unsigned int i=0; i<n; i++){
 		if(m_vr==OW){
 			unsigned short val = ReadUShort();
+
 			buffer->push_back(val);
 		}
 		else{
 			unsigned char val = ReadByte();
+
 			buffer->push_back(val);
+		}
+		if(m_rescaleIntercept < 0.0)
+		{
+			buffer->back() = (unsigned short)((signed short)(buffer->back()*m_rescaleSlope + m_rescaleIntercept) + 32768);
 		}
 	}
 }
@@ -399,13 +404,11 @@ void CDicomDecoder::FillPixelBuffer(std::vector<T>* buffer){
 void CDicomDecoder::ReadPixelData(){
 	
 	if(m_ImplVRLittleEnd){
-		
 		switch(m_vr){
 		
 			case OW: {// ow + lit end
-				std::vector<unsigned short>* buffer = new vector<unsigned short>;
-				FillPixelBuffer(buffer);
-				delete buffer;
+				buffer = new vector<unsigned short>;
+				FillPixelBuffer();
 				break;
 			}
 			case OB: {// wrong case
@@ -422,9 +425,8 @@ void CDicomDecoder::ReadPixelData(){
 				switch(m_vr){
 		
 					case OW: {// ow + lit end
-						std::vector<unsigned short>* buffer = new vector<unsigned short>;
-						FillPixelBuffer(buffer);
-						delete buffer;
+						buffer = new vector<unsigned short>;
+						FillPixelBuffer();
 						break;
 					}
 					case OB: {// wrong case
@@ -438,15 +440,13 @@ void CDicomDecoder::ReadPixelData(){
 				switch(m_vr){
 		
 					case OW: { // ow + lit end
-						std::vector<unsigned short>* buffer  = new vector<unsigned short>;
-						FillPixelBuffer(buffer);
-						delete buffer;
+						buffer = new vector<unsigned short>;
+						FillPixelBuffer();
 						break;
 					}
 					case OB: {// ob + lit end
-						std::vector<unsigned char>* buffer = new vector<unsigned char>;
-						FillPixelBuffer(buffer);
-						delete buffer;
+						buffer = new vector<unsigned short>;
+						FillPixelBuffer();
 						break;
 					}
 					default: break;
@@ -646,6 +646,13 @@ bool CDicomDecoder::ReadFile(QString path){
 
 						if(!m_compressedImage){
 							
+							//&
+							//if(m_pixelRepresentation == 1)
+							{ // ?
+								m_signedImage = true; // ?
+								m_windowCentre -= -32768;
+							}
+
 							ReadPixelData();
 						}
 						else{
@@ -683,4 +690,4 @@ const string CDicomDecoder::ExplicitVRBigEndian = "1.2.840.10008.1.2.2";
 
 
 const map<unsigned int, string> CDicomDecoder::tagDictionary = CDicomDictionary::InitTagMap();
-
+std::vector<unsigned short>* CDicomDecoder::buffer;
