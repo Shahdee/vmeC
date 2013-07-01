@@ -15,6 +15,7 @@ public:
 	void SetImagePrm(const int w, const int h, const double center, const double width);
 	void SendBuffer(std::vector<unsigned short>*);
 	void ComputeLookUpTable(); 
+	void CreateVertexColorArr();
 
 protected:
 	void showEvent(QShowEvent *event);
@@ -31,7 +32,9 @@ private:
 	double m_winMax;
 	bool m_bShowImage;
 
+	static float* pvertexArray;
+	static float* pcolorArray;
 	static std::vector<unsigned short>* buffer;
-	static std::vector<unsigned char>* lut;
+	static std::vector<float>* lut;
 };
 

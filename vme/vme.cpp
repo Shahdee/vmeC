@@ -20,6 +20,7 @@ void vme::GetFilePath()
 		ui.m_2dTab->SetImagePrm(m_dicomDecoder.m_width, m_dicomDecoder.m_height, m_dicomDecoder.m_windowCentre, m_dicomDecoder.m_windowWidth);
 		ui.m_2dTab->SendBuffer(m_dicomDecoder.buffer);
 		ui.m_2dTab->ComputeLookUpTable();
+		ui.m_2dTab->CreateVertexColorArr();
 	}
 }
 
