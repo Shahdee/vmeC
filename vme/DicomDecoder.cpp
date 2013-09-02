@@ -456,6 +456,42 @@ void CDicomDecoder::ReadPixelData(){
 	}
 }
 
+void CDicomDecoder::ClearData()
+{
+	m_littleEndian = true;  // wtf
+
+	m_ImplVRLittleEnd = false;
+	m_ExpVRLittleEnd = false;
+	m_ExpVRBigEnd = false;
+
+	m_compressedImage = false;
+
+	m_signedImage = false;
+    m_dicomFileReadSuccess = false;
+    m_readingDataElements = true;
+    m_oddLocations = false;
+	m_delimiter = false; // ?
+	m_dicomDir = false;
+	m_location = 0; 
+	m_position = -1;
+	m_bitsAllocated = 0;
+	m_width = 1;
+	m_height = 1;
+	m_offset = 1;
+	m_nImages = 1;
+	m_samplesPerPixel = 1;
+	m_photoInterpretation = "";
+	m_unit = "mm";
+	m_windowCentre = 1;
+	m_windowWidth = 1;
+
+	m_inSequence = false;
+	m_itemDelimiter = false;
+	m_sequenceDelimiter = false ;
+
+	//delete buffer;
+}
+
 // it is assumed that DICOM default transfer syntax is implicit VR, little endian
 bool CDicomDecoder::ReadFile(QString path){
 
@@ -476,6 +512,8 @@ bool CDicomDecoder::ReadFile(QString path){
 
 		if(CDicomDecoder::DICM.compare(0, 4, dicom)!=0){
 
+			ClearData();
+			m_dicomFile.close();
 			return false;
 		}
 		else{
@@ -660,6 +698,8 @@ bool CDicomDecoder::ReadFile(QString path){
 						}
 
 						m_readingDataElements = false;
+						m_dicomFile.close();
+
 						return true;
 					}
 

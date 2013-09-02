@@ -16,6 +16,7 @@ public:
 	void SendBuffer(std::vector<unsigned short>*);
 	void ComputeLookUpTable(); 
 	void CreateVertexColorArr();
+	void FlushBuffers();
 
 protected:
 	void showEvent(QShowEvent *event);

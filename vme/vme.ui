@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>909</width>
+    <width>961</width>
     <height>613</height>
    </rect>
   </property>
@@ -35,67 +35,68 @@
    <property name="enabled">
     <bool>true</bool>
    </property>
-   <widget class="QWidget" name="m_mainSurface" native="true">
+   <widget class="CImagePlane" name="m_imagesPlane">
     <property name="enabled">
      <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
-      <x>-350</x>
-      <y>-10</y>
-      <width>1291</width>
-      <height>771</height>
+      <x>80</x>
+      <y>10</y>
+      <width>512</width>
+      <height>542</height>
      </rect>
     </property>
-    <property name="maximumSize">
+    <property name="minimumSize">
      <size>
-      <width>16777215</width>
-      <height>16777215</height>
+      <width>0</width>
+      <height>0</height>
      </size>
     </property>
-    <widget class="CImagePlane" name="m_imagesPlane">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>360</x>
-       <y>10</y>
-       <width>560</width>
-       <height>560</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="tabShape">
-      <enum>QTabWidget::Rounded</enum>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <property name="iconSize">
-      <size>
-       <width>16</width>
-       <height>16</height>
-      </size>
-     </property>
-     <property name="movable">
-      <bool>true</bool>
-     </property>
-     <widget class="CFlatPlane" name="m_2dTab">
-      <attribute name="title">
-       <string>2D stack</string>
-      </attribute>
-     </widget>
-     <widget class="CVolumePlane" name="m_3dTab">
-      <attribute name="title">
-       <string>3D model</string>
-      </attribute>
-     </widget>
+    <property name="baseSize">
+     <size>
+      <width>0</width>
+      <height>0</height>
+     </size>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTabBar::tab { height: 30px; width: 100px; }</string>
+    </property>
+    <property name="tabShape">
+     <enum>QTabWidget::Rounded</enum>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>16</width>
+      <height>16</height>
+     </size>
+    </property>
+    <property name="movable">
+     <bool>true</bool>
+    </property>
+    <widget class="CFlatPlane" name="m_2dStackTab">
+     <attribute name="title">
+      <string>2D stack</string>
+     </attribute>
+    </widget>
+    <widget class="CVolumePlane" name="m_3dVoxTab">
+     <attribute name="title">
+      <string>3D model</string>
+     </attribute>
+    </widget>
+    <widget class="CVolumePlane" name="m_3dMeshTab">
+     <attribute name="title">
+      <string>3D Mesh</string>
+     </attribute>
     </widget>
    </widget>
   </widget>
@@ -315,7 +316,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>909</width>
+     <width>961</width>
      <height>21</height>
     </rect>
    </property>

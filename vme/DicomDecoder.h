@@ -223,6 +223,8 @@ public:
 	string m_unit;
 
 	bool ReadFile(QString); 
+
+	void ClearData(); 
 };
 
 

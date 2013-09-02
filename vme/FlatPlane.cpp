@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include <QtGui>
 #include "FlatPlane.h"
+#include <ctime>
 
  #ifndef GL_MULTISAMPLE
  #define GL_MULTISAMPLE  0x809D
@@ -54,7 +55,9 @@ void  CFlatPlane::resizeGL(int width, int height){
 }
 
 void CFlatPlane::paintGL(){
+
 	glClear(GL_COLOR_BUFFER_BIT);
+
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -69,14 +72,12 @@ void CFlatPlane::SetImagePrm(const int width, const int height, const double cen
 	m_winMax = center + 0.5*range;
 	m_winMin = m_winMax - range;
 
-	m_bShowImage = true;
+	//m_bShowImage = true;
 }
 
 void CFlatPlane::SendBuffer(std::vector<unsigned short>* pBuffer){
 	buffer = pBuffer;
 }
-
-
 
 void CFlatPlane::ComputeLookUpTable(){
 	float factor = 255.0/(m_winMax - m_winMin);
@@ -93,7 +94,10 @@ void CFlatPlane::ComputeLookUpTable(){
 }
 
 void CFlatPlane::CreateVertexColorArr(){
-	if(!pvertexArray){
+
+	//DWORD tick1 = GetTickCount();
+
+	if(pvertexArray == NULL){
 		pvertexArray = new float[m_pmWidth*m_pmHeight*2];
 	}
 
@@ -109,7 +113,7 @@ void CFlatPlane::CreateVertexColorArr(){
 		j++;
 	}	
 
-	if(!pcolorArray){
+	if(pcolorArray == NULL){
 		pcolorArray = new float[m_pmWidth*m_pmHeight*4];
 	}
 
@@ -121,10 +125,41 @@ void CFlatPlane::CreateVertexColorArr(){
 			j=0;
 		}
 		pcolorArray[i]=lut->at(buffer->at(k*m_pmHeight+j));
-		pcolorArray[i+1]=lut->at(buffer->at(k*m_pmHeight+j));
-		pcolorArray[i+2]=lut->at(buffer->at(k*m_pmHeight+j));
+		pcolorArray[i+1]= pcolorArray[i];
+		pcolorArray[i+2]= pcolorArray[i];
 		pcolorArray[i+3]=1.0f;
 		j++;
+	}
+
+	//DWORD tick2 = GetTickCount() - tick1;
+
+	m_bShowImage = true;
+	//system("pause");
+}
+
+void CFlatPlane::FlushBuffers()
+{
+	if(pvertexArray != NULL)
+	{
+		delete[] pvertexArray;
+		pvertexArray = NULL;
+	}
+
+	if(pcolorArray != NULL)
+	{
+		delete[] pcolorArray;
+		pcolorArray = NULL;
+	}
+
+	if(lut != NULL)
+	{
+		delete lut;
+		lut = NULL;
+	}
+	if(buffer != NULL)
+	{
+		delete buffer;
+		buffer = NULL;
 	}
 }
 
