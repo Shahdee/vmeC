@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include <QtGui>
 #include "FlatPlane.h"
+#include <ctime>
 
  #ifndef GL_MULTISAMPLE
  #define GL_MULTISAMPLE  0x809D
@@ -93,6 +94,9 @@ void CFlatPlane::ComputeLookUpTable(){
 }
 
 void CFlatPlane::CreateVertexColorArr(){
+
+	//DWORD tick1 =  GetTickCount();
+
 	if(!pvertexArray){
 		pvertexArray = new float[m_pmWidth*m_pmHeight*2];
 	}
@@ -126,13 +130,21 @@ void CFlatPlane::CreateVertexColorArr(){
 		pcolorArray[i+3]=1.0f;
 		j++;
 	}
+
+	//DWORD tick2 = GetTickCount() - tick1;
 }
 
 void CFlatPlane::SetImage(){
-	
+	 
+	 DWORD tick1 =  GetTickCount();
+
 	 glVertexPointer (2, GL_FLOAT, 0, pvertexArray);
 	 glColorPointer(4, GL_FLOAT, 0, pcolorArray);
 	 glDrawArrays(GL_POINTS, 0, m_pmWidth*m_pmHeight);
+
+	 DWORD tick2 = GetTickCount() - tick1;
+
+	 //system("pause");
 }
 
 std::vector<unsigned short>* CFlatPlane::buffer;
