@@ -6,14 +6,23 @@
 vme::vme(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 {
 	ui.setupUi(this);
-	QObject::connect(ui.m_tbarOpenImageButton, SIGNAL(triggered()), this, SLOT(GetFilePath()));
+	QObject::connect(ui.m_tbarOpeStudyButton, SIGNAL(triggered()), this, SLOT(GetPathAndReadSeveralFiles());
+	QObject::connect(ui.m_tbarOpenImageButton, SIGNAL(triggered()), this, SLOT(GetPathAndReadFile()));
 	QObject::connect(ui.m_tbarExitButton, SIGNAL(triggered()), this , SLOT(close()));
 }
 
+void vme::GetPathAndReadSeveralFiles(){
 
-void vme::GetFilePath()
+	QString path = QFileDialog::getExistingDirectory(this, tr("Open Dicom folder"), "", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+	m_dicomDecoder.ClearData();
+
+
+}
+
+void vme::GetPathAndReadFile()
 {
-	QString path = QFileDialog::getOpenFileName(this, tr("Open File"), "", tr("Files (*.*)"));
+	QString path = QFileDialog::getOpenFileName(this, tr("Open Dicom image"), "", tr("Files (*.*)"));
 	
 	m_dicomDecoder.ClearData();
 

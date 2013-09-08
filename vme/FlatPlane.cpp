@@ -62,7 +62,12 @@ void CFlatPlane::paintGL(){
     glLoadIdentity();
 
 	if(m_bShowImage){
-		SetImage();
+
+		if(pvertexArray != NULL && pcolorArray != NULL){
+			glVertexPointer (2, GL_FLOAT, 0, pvertexArray);
+			glColorPointer(4, GL_FLOAT, 0, pcolorArray);
+			glDrawArrays(GL_POINTS, 0, m_pmWidth*m_pmHeight);
+		}
 	}
 }
 
@@ -163,12 +168,6 @@ void CFlatPlane::FlushBuffers()
 	}
 }
 
-void CFlatPlane::SetImage(){
-	
-	 glVertexPointer (2, GL_FLOAT, 0, pvertexArray);
-	 glColorPointer(4, GL_FLOAT, 0, pcolorArray);
-	 glDrawArrays(GL_POINTS, 0, m_pmWidth*m_pmHeight);
-}
 
 std::vector<unsigned short>* CFlatPlane::buffer;
 std::vector<float>* CFlatPlane::lut;
