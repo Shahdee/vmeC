@@ -11,11 +11,11 @@ public:
 	~CFlatPlane(void);
 
 	void Axis();
-	void SetImage();
 	void SetImagePrm(const int w, const int h, const double center, const double width);
 	void SendBuffer(std::vector<unsigned short>*);
 	void ComputeLookUpTable(); 
 	void CreateVertexColorArr();
+	void FlushBuffers();
 
 protected:
 	void showEvent(QShowEvent *event);

@@ -24,7 +24,9 @@ private:
 
 private slots:
 
-	void GetFilePath();
+	void GetPathAndReadSeveralFiles();
+
+	void GetPathAndReadFile();
 
 public:
 
