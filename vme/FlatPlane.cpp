@@ -81,7 +81,7 @@ void CFlatPlane::SetImagePrm(const int width, const int height, const double cen
 }
 
 void CFlatPlane::SendBuffer(std::vector<unsigned short>* pBuffer){
-	buffer = pBuffer;
+	m_buffer = pBuffer;
 }
 
 void CFlatPlane::ComputeLookUpTable(){
@@ -129,7 +129,7 @@ void CFlatPlane::CreateVertexColorArr(){
 			k++;
 			j=0;
 		}
-		pcolorArray[i]=lut->at(buffer->at(k*m_pmHeight+j));
+		pcolorArray[i]=lut->at(m_buffer->at(k*m_pmHeight+j));
 		pcolorArray[i+1]= pcolorArray[i];
 		pcolorArray[i+2]= pcolorArray[i];
 		pcolorArray[i+3]=1.0f;
@@ -142,8 +142,8 @@ void CFlatPlane::CreateVertexColorArr(){
 	//system("pause");
 }
 
-void CFlatPlane::FlushBuffers()
-{
+void CFlatPlane::FlushBuffers(){
+
 	if(pvertexArray != NULL)
 	{
 		delete[] pvertexArray;
@@ -161,15 +161,20 @@ void CFlatPlane::FlushBuffers()
 		delete lut;
 		lut = NULL;
 	}
-	if(buffer != NULL)
+	if(m_buffer != NULL)
 	{
-		delete buffer;
-		buffer = NULL;
+		delete m_buffer;
+		m_buffer = NULL;
 	}
 }
 
+void CFlatPlane::ResetBufferPtr(){
+	
+	m_buffer = NULL;
+}
 
-std::vector<unsigned short>* CFlatPlane::buffer;
+
+std::vector<unsigned short>* CFlatPlane::m_buffer;
 std::vector<float>* CFlatPlane::lut;
 float* CFlatPlane::pvertexArray;
 float* CFlatPlane::pcolorArray;
