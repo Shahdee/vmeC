@@ -16,6 +16,7 @@ public:
 	void ComputeLookUpTable(); 
 	void CreateVertexColorArr();
 	void FlushBuffers();
+	void ResetBufferPtr();
 
 protected:
 	void showEvent(QShowEvent *event);
@@ -34,7 +35,7 @@ private:
 
 	static float* pvertexArray;
 	static float* pcolorArray;
-	static std::vector<unsigned short>* buffer;
+	static std::vector<unsigned short>* m_buffer;
 	static std::vector<float>* lut;
 };
 

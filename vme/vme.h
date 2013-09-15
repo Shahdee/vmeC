@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsview>
 #include "ui_vme.h"
+#include <QtGui>
 
 #include "DicomDecoder.h"
 
@@ -19,9 +20,13 @@ public:
 
 	CDicomDecoder m_dicomDecoder;
 
-private:
-	Ui::vmeClass ui;
+	static std::vector<std::vector<unsigned short>*> m_v3dBuffer;
 
+private:
+	Ui::vmeClass m_ui;
+
+	QString m_sfilePath[];
+	
 private slots:
 
 	void GetPathAndReadSeveralFiles();
