@@ -42,11 +42,7 @@ CDicomDecoder::CDicomDecoder(void)
 	m_sequenceDelimiter = false ;
 }
 
-
-CDicomDecoder::~CDicomDecoder(void)
-{
-
-}
+CDicomDecoder::~CDicomDecoder(void){}
 
 string CDicomDecoder::GetString(int size){
 
@@ -281,8 +277,6 @@ void CDicomDecoder::ReadSequence(){
 }
 
 char* CDicomDecoder::GetString(){
-
-	//vector<char> buf(m_elementLength);
 
 	char *buf = new char[m_elementLength+1];
 	m_dicomFile.read(buf, m_elementLength);
