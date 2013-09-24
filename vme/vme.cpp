@@ -14,7 +14,6 @@ vme::vme(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 
 void vme::GetPathAndReadSeveralFiles(){
 
-	//QString path = QFileDialog::getExistingDirectory(this, tr("Open Dicom folder"), "", QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 	QStringList afilePaths = QFileDialog::getOpenFileNames(this, tr("Selected Dicom files"), "");
 
 	if(afilePaths.size() > 0){
@@ -68,8 +67,11 @@ void vme::GetPathAndReadFile()
 			if(vme::m_v3dBuffer.size() > 0)
 			{
 				for(int i=0; i< vme::m_v3dBuffer.size(); i++){
-					delete (vme::m_v3dBuffer[i]);
+
+					delete (vme::m_v3dBuffer.at(i));
+					vme::m_v3dBuffer.at(i) = NULL;
 				}
+				vme::m_v3dBuffer.erase(vme::m_v3dBuffer.begin(), vme::m_v3dBuffer.end());
 				m_ui.m_2dStackTab->ResetBufferPtr();
 			}
 			m_ui.m_2dStackTab->FlushBuffers();
