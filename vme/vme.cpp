@@ -9,6 +9,7 @@ vme::vme(QWidget *parent, Qt::WFlags flags) : QMainWindow(parent, flags)
 	QObject::connect(m_ui.m_tbarOpeStudyButton, SIGNAL(triggered()), this, SLOT(GetPathAndReadSeveralFiles()));
 	QObject::connect(m_ui.m_tbarOpenImageButton, SIGNAL(triggered()), this, SLOT(GetPathAndReadFile()));
 	QObject::connect(m_ui.m_tbarExitButton, SIGNAL(triggered()), this , SLOT(close()));
+	QObject::connect(m_ui.m_vis3D
 }
 
 void vme::GetPathAndReadSeveralFiles(){
@@ -28,23 +29,25 @@ void vme::GetPathAndReadSeveralFiles(){
 			}
 			m_ui.m_2dStackTab->ResetBufferPtr();
 		}
-
 		//DWORD tick1 = GetTickCount();
 
 		while(it != afilePaths.end()) {
 
 			if(m_dicomDecoder.ReadFile((*it))){
+				
 				vme::m_v3dBuffer.push_back(m_dicomDecoder.buffer);
-			}
+			
+				if( it != (afilePaths.end()-1))
+					m_dicomDecoder.ClearData();
+				else{
+					m_ui.m_2dStackTab->FlushBuffers();
+					m_ui.m_2dStackTab->SetImagePrm(m_dicomDecoder.m_width, m_dicomDecoder.m_height, m_dicomDecoder.m_windowCentre, m_dicomDecoder.m_windowWidth);
+					m_ui.m_2dStackTab->SendBuffer(m_dicomDecoder.buffer);
+					m_ui.m_2dStackTab->ComputeLookUpTable();
+					m_ui.m_2dStackTab->CreateVertexColorArr();
 
-			if( it != (afilePaths.end()-1))
-				m_dicomDecoder.ClearData();
-			else{
-				m_ui.m_2dStackTab->FlushBuffers();
-				m_ui.m_2dStackTab->SetImagePrm(m_dicomDecoder.m_width, m_dicomDecoder.m_height, m_dicomDecoder.m_windowCentre, m_dicomDecoder.m_windowWidth);
-				m_ui.m_2dStackTab->SendBuffer(m_dicomDecoder.buffer);
-				m_ui.m_2dStackTab->ComputeLookUpTable();
-				m_ui.m_2dStackTab->CreateVertexColorArr();
+					m_ui.m_2dStackTab->updateGL();
+				}
 			}
 			++it;
 		}
@@ -69,12 +72,13 @@ void vme::GetPathAndReadFile()
 				}
 				m_ui.m_2dStackTab->ResetBufferPtr();
 			}
-
 			m_ui.m_2dStackTab->FlushBuffers();
 			m_ui.m_2dStackTab->SetImagePrm(m_dicomDecoder.m_width, m_dicomDecoder.m_height, m_dicomDecoder.m_windowCentre, m_dicomDecoder.m_windowWidth);
 			m_ui.m_2dStackTab->SendBuffer(m_dicomDecoder.buffer);
 			m_ui.m_2dStackTab->ComputeLookUpTable();
 			m_ui.m_2dStackTab->CreateVertexColorArr();
+
+			m_ui.m_2dStackTab->updateGL();
 		}
 	}
 }

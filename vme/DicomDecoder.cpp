@@ -42,13 +42,9 @@ CDicomDecoder::CDicomDecoder(void)
 	m_sequenceDelimiter = false ;
 }
 
+CDicomDecoder::~CDicomDecoder(void){}
 
-CDicomDecoder::~CDicomDecoder(void)
-{
-
-}
-
-string CDicomDecoder::GetString(int size){
+char* CDicomDecoder::GetString(int size){
 
 	char* buff = new char[size];
 	m_dicomFile.read(buff, size);
@@ -180,7 +176,6 @@ void CDicomDecoder::SkipBytes(const int& length){
 	m_location += length;
 }
 
-
 void CDicomDecoder::TrySkipSequence(){
 
 	// now it is the only one real case
@@ -216,7 +211,6 @@ void CDicomDecoder::TrySkipSequence(){
 */
 void CDicomDecoder::ReadItem(){
 	
-
 	unsigned int tag = ReadTag(); // 4
 	int length = ReadInt(); // ReadInt() instead of ReadElementLength because we are in sequence
 
@@ -269,7 +263,6 @@ void CDicomDecoder::ReadItem(){
 	}
 }
 
-
 /*
 If we have Data Element with VR = SQ
 */
@@ -281,8 +274,6 @@ void CDicomDecoder::ReadSequence(){
 }
 
 char* CDicomDecoder::GetString(){
-
-	//vector<char> buf(m_elementLength);
 
 	char *buf = new char[m_elementLength+1];
 	m_dicomFile.read(buf, m_elementLength);
@@ -328,7 +319,9 @@ void CDicomDecoder::AddInfo(const unsigned int& tag, string& value){
 		case DS:
 		case UI:{
 
- 			value.assign(GetString()); 
+			char* buff = GetString();
+			value.assign(buff);
+			delete[] buff;
 			break;
 		}
 
@@ -507,17 +500,19 @@ bool CDicomDecoder::ReadFile(QString path){
 		
 		m_location += offset;
 
-		string dicom="1234";
-		GetString(4).copy(&(dicom[0]), 4, 0);
+		char* buff = GetString(4);
 
-		if(CDicomDecoder::DICM.compare(0, 4, dicom)!=0){
+		if(CDicomDecoder::DICM.compare(0,4,buff,4)!=0){
 
+			delete[] buff;
 			ClearData();
 			m_dicomFile.close();
 			return false;
 		}
 		else{
 			
+			delete[] buff;
+
 			while(m_readingDataElements){
 				
 				unsigned int tag = ReadTag();

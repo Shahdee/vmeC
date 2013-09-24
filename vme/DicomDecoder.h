@@ -169,7 +169,7 @@ private:
 	string m_imageOrientationPatient; // temp type
 
 	//--------------------------------
-	string GetString(int);
+	char* GetString(int);
 
 	unsigned int ReadTag();
 
