@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+#include "stdafx.h"
 #include <QtGui>
 #include "FlatPlane.h"
 #include <ctime>
@@ -9,18 +9,15 @@
 
 CFlatPlane::CFlatPlane(QWidget *parent) :  QGLWidget(QGLFormat(QGL::SampleBuffers), parent){
 	m_bShowImage = false;
-	m_winMin = 0.0;
-	m_winMax = 0.0;
+	m_dWinMin = 0.0;
+	m_dWinMax = 0.0;
 }
 
-CFlatPlane::~CFlatPlane(void){
-
-}
+CFlatPlane::~CFlatPlane(void){}
 
 
 /*
 void CFlatPlane::paintEvent(QPaintEvent* event){
-	
 	
 	makeCurrent(); // Makes this widget the current widget for OpenGL operations, i.e. makes the widget's rendering context the current OpenGL rendering context.
 
@@ -62,39 +59,59 @@ void CFlatPlane::paintGL(){
     glLoadIdentity();
 
 	if(m_bShowImage){
-
 		if(pvertexArray != NULL && pcolorArray != NULL){
 			glVertexPointer (2, GL_FLOAT, 0, pvertexArray);
-			glColorPointer(4, GL_FLOAT, 0, pcolorArray);
-			glDrawArrays(GL_POINTS, 0, m_pmWidth*m_pmHeight);
+			glColorPointer(3, GL_FLOAT, 0, pcolorArray);
+			glDrawArrays(GL_POINTS, 0, m_iWidth*m_iHeight);
 		}
 	}
 }
 
 void CFlatPlane::SetImagePrm(const int width, const int height, const double center, const double range ){
-	m_pmWidth = width;
-	m_pmHeight = height;
-	m_winMax = center + 0.5*range;
-	m_winMin = m_winMax - range;
+	m_iWidth = width;
+	m_iHeight = height;
+	m_dWinCenter = center;
+	m_dWinWidth = range;
 
-	//m_bShowImage = true;
+	m_dWinMax = m_dWinCenter + 0.5*m_dWinWidth;
+	m_dWinMin = m_dWinMax - m_dWinWidth;
+
+	ComputeChangeVals();
 }
 
-void CFlatPlane::SendBuffer(std::vector<unsigned short>* pBuffer){
-	m_buffer = pBuffer;
+void CFlatPlane::SendImageBuffer(std::vector<unsigned short>* pBuffer){
+	m_pImageBuffer = pBuffer;
+}
+
+void CFlatPlane::ComputeChangeVals(){
+
+    if (m_dWinWidth < 5000){
+        m_iChangeWidth = 2;
+        m_iChangeCenter = 2;
+    }
+    else 
+		if (m_dWinWidth > 40000){
+			m_iChangeWidth = 50;
+			m_iChangeCenter = 50;
+		}
+		else{
+			m_iChangeWidth = 25;
+			m_iChangeCenter = 25;
+		}
 }
 
 void CFlatPlane::ComputeLookUpTable(){
-	float factor = 255.0/(m_winMax - m_winMin);
+
+	float factor = 255.0/(m_dWinMax - m_dWinMin);
 	lut = new std::vector<float>;
 	for(unsigned int i=0; i< 65535; i++){
-		 if (i <= m_winMin)
+		 if (i <= m_dWinMin)
 			lut->push_back(0);
          else
-			 if (i >= m_winMax)
+			 if (i >= m_dWinMax)
 				lut->push_back(1.0);
              else
-				lut->push_back(((i - m_winMin)*factor)/255.0f);
+				lut->push_back(((i - m_dWinMin)*factor)/255.0f);
 	}
 }
 
@@ -103,12 +120,12 @@ void CFlatPlane::CreateVertexColorArr(){
 	//DWORD tick1 = GetTickCount();
 
 	if(pvertexArray == NULL){
-		pvertexArray = new float[m_pmWidth*m_pmHeight*2];
+		pvertexArray = new float[m_iWidth * m_iHeight * 2];
 	}
 
 	int j=0;
 	int k=0;
-	for(int i=0; i<m_pmHeight*m_pmWidth*2; i+=2){
+	for(int i=0; i<m_iWidth*m_iHeight*2; i+=2){
 		if(j==512){
 			k++;
 			j=0;
@@ -119,62 +136,121 @@ void CFlatPlane::CreateVertexColorArr(){
 	}	
 
 	if(pcolorArray == NULL){
-		pcolorArray = new float[m_pmWidth*m_pmHeight*4];
+		pcolorArray = new float[m_iWidth*m_iHeight*3];
 	}
+
+	//DWORD t1 = GetTickCount();
 
 	k=0;
 	j=0;
-	for(int i=0; i<m_pmHeight*m_pmWidth*4; i+=4){
+	for(int i=0; i<m_iWidth*m_iHeight*3; i+=3){
 		if(j==512){
 			k++;
 			j=0;
 		}
-		pcolorArray[i]=lut->at(m_buffer->at(k*m_pmHeight+j));
-		pcolorArray[i+1]= pcolorArray[i];
-		pcolorArray[i+2]= pcolorArray[i];
-		pcolorArray[i+3]=1.0f;
+		pcolorArray[i]=lut->at(m_pImageBuffer->at(k*m_iHeight+j)); //R
+		pcolorArray[i+1]= pcolorArray[i]; //G
+		pcolorArray[i+2]= pcolorArray[i]; //B
+		//pcolorArray[i+3]=1.0f; //A
 		j++;
 	}
 
-	//DWORD tick2 = GetTickCount() - tick1;
+	//DWORD t2 = GetTickCount() - t1;
 
 	m_bShowImage = true;
 	//system("pause");
 }
 
-void CFlatPlane::FlushBuffers(){
 
-	if(pvertexArray != NULL)
-	{
+void CFlatPlane::FlushBuffers(bool bTF){
+
+	if (pvertexArray != NULL){
 		delete[] pvertexArray;
 		pvertexArray = NULL;
 	}
 
-	if(pcolorArray != NULL)
-	{
+	if (pcolorArray != NULL){
 		delete[] pcolorArray;
 		pcolorArray = NULL;
 	}
 
-	if(lut != NULL)
-	{
+	if (lut != NULL){
 		delete lut;
 		lut = NULL;
 	}
-	if(m_buffer != NULL)
-	{
-		delete m_buffer;
-		m_buffer = NULL;
+
+	if (m_pImageBuffer != NULL  && !bTF){
+		delete m_pImageBuffer;
+		m_pImageBuffer = NULL;
 	}
 }
 
-void CFlatPlane::ResetBufferPtr(){
+void CFlatPlane::ResetImageBufferPtr(){
 	
-	m_buffer = NULL;
+	m_pImageBuffer = NULL;
+}
+
+void CFlatPlane::mousePressEvent(QMouseEvent* ev){
+	if(!m_bShowImage) return;
+
+	if(ev->button() == Qt::RightButton){
+		m_lastPress = ev->pos();
+		m_bRightBtnPressed = true;
+	}
+
+}
+
+void CFlatPlane::mouseReleaseEvent(QMouseEvent* ev){
+	if(!m_bShowImage) return;
+
+	if(ev->button() == Qt::RightButton){
+
+		if(m_bRightBtnPressed)
+		{
+			m_bRightBtnPressed = false;
+		}
+	}
 }
 
 
-std::vector<unsigned short>* CFlatPlane::m_buffer;
+void CFlatPlane::mouseMoveEvent(QMouseEvent * ev){
+	
+	if(m_bRightBtnPressed){
+
+		if(m_lastPress.y() > ev->pos().y()){
+			
+			m_dWinWidth +=50;
+			m_dWinMax = m_dWinCenter + 0.5*m_dWinWidth;
+			m_dWinMin = m_dWinMax - m_dWinWidth;
+		}
+
+		if(m_lastPress.y() < ev->pos().y()){
+
+			m_dWinWidth -=50;
+			m_dWinMax = m_dWinCenter + 0.5*m_dWinWidth;
+			m_dWinMin = m_dWinMax - m_dWinWidth;
+		}
+
+		if(m_lastPress.x() > ev->pos().x()){
+			m_dWinCenter -=50;
+			m_dWinMax = m_dWinCenter + 0.5*m_dWinWidth;
+			m_dWinMin = m_dWinMax - m_dWinWidth;
+		}
+
+		if(m_lastPress.x() < ev->pos().x()){
+			m_dWinCenter +=50;
+			m_dWinMax = m_dWinCenter + 0.5*m_dWinWidth;
+			m_dWinMin = m_dWinMax - m_dWinWidth;
+		}
+
+		ComputeLookUpTable();
+		CreateVertexColorArr();
+		updateGL();
+	}
+}
+
+
+std::vector<unsigned short>* CFlatPlane::m_pImageBuffer;
 std::vector<float>* CFlatPlane::lut;
 float* CFlatPlane::pvertexArray;
 float* CFlatPlane::pcolorArray;

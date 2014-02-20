@@ -12,11 +12,11 @@ public:
 
 	void Axis();
 	void SetImagePrm(const int w, const int h, const double center, const double width);
-	void SendBuffer(std::vector<unsigned short>*);
+	void SendImageBuffer(std::vector<unsigned short>*);
 	void ComputeLookUpTable(); 
 	void CreateVertexColorArr();
-	void FlushBuffers();
-	void ResetBufferPtr();
+	void FlushBuffers(bool bTF = false);
+	void ResetImageBufferPtr();
 
 protected:
 	void showEvent(QShowEvent *event);
@@ -27,15 +27,30 @@ protected:
     void paintGL();
 
 private:
-	int m_pmWidth;
-	int m_pmHeight;
-	double m_winMin;
-	double m_winMax;
+	int m_iWidth;
+	int m_iHeight;
+	double m_dWinMin;
+	double m_dWinMax;
+	double m_dWinCenter;
+	double m_dWinWidth;
+
+	int m_iChangeWidth;
+	int	m_iChangeCenter;
+
 	bool m_bShowImage;
 
 	static float* pvertexArray;
 	static float* pcolorArray;
-	static std::vector<unsigned short>* m_buffer;
+	static std::vector<unsigned short>* m_pImageBuffer;
 	static std::vector<float>* lut;
+
+	QPoint m_lastPress;
+	bool m_bRightBtnPressed;
+
+	void ComputeChangeVals();
+
+	void mousePressEvent(QMouseEvent * ev);
+	void mouseReleaseEvent(QMouseEvent * ev);
+	void mouseMoveEvent(QMouseEvent * ev);
 };
 

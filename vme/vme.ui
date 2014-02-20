@@ -212,7 +212,7 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_2">
-    <widget class="QGraphicsView" name="m_visTF">
+    <widget class="CVisualFunction" name="m_visTF">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -410,6 +410,11 @@
    <extends>QWidget</extends>
    <header>VolumePlane.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>CVisualFunction</class>
+   <extends>QGraphicsView</extends>
+   <header>VisualFunction.h</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -95,6 +95,15 @@
     <ClCompile Include="VolumePlane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VisualFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_VisualFunction.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_VisualFunction.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -138,5 +147,16 @@
     <CustomBuild Include="FlatPlane.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
+    <CustomBuild Include="VisualFunction.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="kernel.cuh">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="kernel.cu">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

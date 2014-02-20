@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'vme.ui'
 **
-** Created: Fri 13. Sep 01:35:33 2013
+** Created: Mon 21. Oct 01:48:26 2013
 **      by: Qt User Interface Compiler version 4.8.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -17,7 +17,6 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QDockWidget>
 #include <QtGui/QFrame>
-#include <QtGui/QGraphicsView>
 #include <QtGui/QHeaderView>
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenu>
@@ -27,6 +26,7 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QWidget>
 #include "FlatPlane.h"
+#include "VisualFunction.h"
 #include "VolumePlane.h"
 
 QT_BEGIN_NAMESPACE
@@ -50,7 +50,7 @@ public:
     QStatusBar *m_statusBar;
     QDockWidget *m_visPanel;
     QWidget *dockWidgetContents_2;
-    QGraphicsView *m_visTF;
+    CVisualFunction *m_visTF;
     QPushButton *m_vis3D;
     QPushButton *m_visLoadButton;
     QPushButton *m_visSaveButton;
@@ -145,7 +145,7 @@ public:
         m_visPanel->setAllowedAreas(Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea);
         dockWidgetContents_2 = new QWidget();
         dockWidgetContents_2->setObjectName(QString::fromUtf8("dockWidgetContents_2"));
-        m_visTF = new QGraphicsView(dockWidgetContents_2);
+        m_visTF = new CVisualFunction(dockWidgetContents_2);
         m_visTF->setObjectName(QString::fromUtf8("m_visTF"));
         m_visTF->setGeometry(QRect(10, 10, 300, 200));
         sizePolicy.setHeightForWidth(m_visTF->sizePolicy().hasHeightForWidth());
